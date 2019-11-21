@@ -167,3 +167,73 @@ class Zerg {
 - iOS6 이후부터는 시스템이 뷰의 해제에 임의로 관여하지 않고 대신 개발자가 didReceiveMemoryWarning()에서 메모리 부족 상황의 작업을 처리할 수 있게 됨으로서 @IBOutlet의 별도 weak 설정이 필요없게 되었다. 
 - 그렇게 시스템이 메모리 부족 상황에 대한 임의적 뷰 메모리 해제에 관여하지 않게 됨으로서 뷰 헤제에 시스템이 사용하던 viewWilllUnload / viewDidUnload는 필요없게 되었다. (deprecated)
 
+<br><br>
+
+### # Escaping Closure의 개념
+
+- 메서드로 부터 전달받은 closure를 메서드의 LifeCycle에서 실행하여 끝내지 않고 closure 내부의 결과를 외부에 전달하고자 할 때 사용할 수 있다.
+  - 콜백함수 같은 효과를 볼 수 있음
+- 해당 메서드의 호출이 끝난 이후에도 closure는 메모리 어딘가에 저장되어 있어야하는데 이때 상황에 따라 weak 멤버등의 사용이 필요할  수 있음을 고려해야한다. 
+- @escaping이 명시되어있지 않은 경우 일반적으로 non-escaping closure이며, 메서드 실행의 종료 이전에 closure의 사용이 모두 완료됨을 보장할
+  - Non-escaping closure의 경우 weak 없이도 안전하게 사용할 수 있다. 
+
+<br><br>
+
+### # as, as?, as! 의 차이
+
+- as
+  - 컴파일러가 타입의 성공을 보장하는 타입캐스팅 방법
+  - 컴파일 타임에 캐스팅 가능/불가능 여부를 확인 가능하다.
+- as? 
+  - 타입 변환에 실패할 경우 nil을 리턴한다. 
+  - 컴파일 타임에 캐스팅 가능/불가능 여부를 확인 불가(Xcode IDE에선 가능)
+
+- as!
+  - 타입 변환에 실패할 경우 앱 크래시가 발생한다. 
+  - 컴파일 타임에 캐스팅 가능/불가능 여부를 확인 불가(Xcode IDE에선 가능)
+- ☆ Xcode 등의 일부 IDE에서는 정적 코드검사를 통해 as, as?, as! 모두에 대한 warning을 제공한다. 
+
+<br><br>
+
+
+
+### Swift에서의 Class - Struct의 차이
+
+- **Class**
+  - 참조 타입 (Reference Type)
+  - 객체로 사용 시 메모리 영역에 서상되며 ARC체계로 메모리 해제가 이루어진다. 
+  - 멀티스레딩, 클로저 내 참조 시 ClosureCapturing 등의 메모리 순환에 주의해야 한다.
+  - 공짜 이니셜라이저가 존재하지 않는다. 
+  - 상속, 프로토콜 채택이 가능하다. 
+  - let으로 Class 객체 생성을 했어도 객체를 접근해서 객체 내의 variable 멤버의 값을 변경시킬 수 있다.
+  - Struct에서 사용할 수 있는 mutating 키워드를 사용할 필요가 없다. 
+- **Struct**
+  - 값 타입 (Value Type)
+  - Struct는 대입 연산 시 값 자체가 복사되어 할당되며 원본과 공유가 불가능하다. 
+  - 불변성(Immutable) 구현에 유리
+  - 멀티스레딩에 안전하다.
+  - 공짜 이니셜라이저(자동 생성자)가 존재한다. 
+  - 상속이 불가능, 프로토콜 채택만 가능하다. 
+  - let으로 Struct 객체를 생성하면 객체 내의 멤버가 variable이어도 해당 멤버의 값을 변경시킬 수 없다. 
+  - 객체 내의 변경을 요구하는 경우 mutating 키워드를 사용해서 메서드를 정의한다. 
+
+
+
+<br><br>
+
+
+
+### # Frame - Bounds의 차이
+
+- Frame
+  - SuperView(상위뷰) 좌표 시스템 내에서의 View 위치(origin)와 크기(size)
+- Bounds
+  - view 자기자신을 기준으로 한 좌표시스템에서의 위치(origin)와 크기(size)
+    - 기본적인 default origin은 x:0, y:0을 가리킨다. 
+  - 부모 뷰의 위치관계와는 아무런 관계가 없다. 
+  - bounds 값이 변경되면 해당 뷰의 서브뷰들의 드로잉 위치가 변경됨을 의미한다. 
+  - bounds값이 변경될 때 subView의 위치가 바뀌는 것은 subView의 frame값이 변경된 것이 아니다. 
+    - bounds값이 바뀌면서 해당 뷰의 좌표축이 변경되었기 때문에 그에따라 서브뷰의 드로잉 위치가 변경되는 것일 뿐이다. 
+  - Bounds 실 사용 예시
+    - UIScrollView/UITableView 등을 스크롤 할때 scrollView.bounds가 변경됨으로서 subView들의 위치가 달라지는 것인 bounds 특징의 예이다. 
+    - 이때도 subView들의 frame은 변동되지 않는다. 
