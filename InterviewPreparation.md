@@ -274,5 +274,17 @@ class Zerg {
 - **UI FrameWork에서 제공되는 일부 View는 고유 컨텐츠사이즈(Intrinsic Content Size)를 가지고 있으며 그 예는 UILabel, UIButton** 등이 있다. 
   - UILabel, UIButton 등은 뷰의 속성(텍스트, 이미지)에 따라 크기가 결정 될 수 있는데 이 때 Intrinsic Content Size보다 작아지거나 커질 수가 있다. 
   - 이때 **Content Hugging Priority는 크기가 늘어나는 것에 대해 저항하는 제약값, Content Compression Resistance는 크기가 줄어드는 것에 대해 저항하는 제약값** 이라고 한다. 
-  - **Content Compression Resistance - Content Hugging Priority - Autolayout Constraint Priority 간에도 우선순위가 존재**하는데 이 중 **Autolayout Constraint Priority가 최우선순위로 적용**된다. 
+  - **Content Compression Resistance - Content Hugging Priority - Autolayout Constraint 간에도 우선순위가 존재**하는데 이 중 **Autolayout Constraint Priority가 최우선순위로 적용**된다. 
 
+<br><br>
+
+### # UICollectionViewLayout클래스의 prepare 메소드 역할
+
+- **prepare 메서드는 UICollectionView의 Layout 연산이 일어날 때마다 호출**된다. 이때 셀 위치, 크기등에 대한 계산을 prepare 메소드에서 사전에 할 수 있다.
+
+<br><br>
+
+### # UITableView 구성 시 셀 컨텐츠에 따른 높이 설정을 하는 방법
+
+- **UITableViewDelegate 프로토콜을 채택해여 델리게이트 메서드인 heightForRowAt 메서드에서 UITableView.automaticDimension값을 리턴**하면 된다. 
+- 세부적으로 셀의 최소 높이 등을 에측하기 위해서는 UITableView의 estimatedRowHeight 등의 프로퍼티를 설정해주면 된다.
