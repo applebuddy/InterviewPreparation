@@ -197,7 +197,7 @@ class Zerg {
 
 
 
-### Swift에서의 Class - Struct의 차이
+### # Swift에서의 Class - Struct의 차이
 
 - **Class**
   - 참조 타입 (Reference Type)
@@ -237,3 +237,42 @@ class Zerg {
   - Bounds 실 사용 예시
     - UIScrollView/UITableView 등을 스크롤 할때 scrollView.bounds가 변경됨으로서 subView들의 위치가 달라지는 것인 bounds 특징의 예이다. 
     - 이때도 subView들의 frame은 변동되지 않는다. 
+
+
+
+### # UIViewController 프로퍼티인 TopLayoutGuide, BottomLayoutGuide가 iOS11에서 deprecated된 이유와 대체수단
+
+- 아이폰X가 생기면서 안전영역에 대한 **SafeAreaLayoutGuide**가 생겼기 때문이다.
+  - **SafeAreaLayoutGuide**는 기존 Top, Bottom LayoutGuide와 **다르게 안전한 컨텐츠 영역의 개념**으로 등장했다.
+- 기존 TopLayoutGuide, BottomLayoutGuide는 두개의 사각 영역으로 되어있는 GuideArea였던 반면, SafeAreaLayoutGuide는 좌/우/위/아래의 하나의 사각 영역으로 되어 있다. 
+
+
+
+<br><br>
+
+### # UIStackView의 장점 
+
+- **복잡한 제약 설정 없이 비교적 간단하게 복잡한 뷰 구조를 구현**할 수 있다. 
+- **arrangedSubview로 UIStackView의 subView들이 관리**되며 하위뷰를은 UIStackView의 **alignment(세로방향), distribution(가로방향), Axis(가로/세로 기준), spacing(subView 간 간격)**의 규칙에 의해 위치가 지정된다. 
+
+
+
+<br><br>
+
+
+
+### # AutoLayout Constraint, Priority의 개념
+
+- 이름 그대로 AutoLayout 간 제약, 우선순위값을 의미한다. 
+  - 일반적으로 제약 간의 충돌이 일어나지 않게 제약을 설정해야하나, 상황에 따라 뷰의 크기가 유동적으로 변하는 경우가 있을 수 있다. 
+  - 이런 제약값이 서로 충돌날 수 있는 경우가 있을때의 우선순위를 결정함으로서 제약의 충돌을 방지할 수 있게 된다. 
+
+<br><br>
+
+### # Intrinsic Content Size
+
+- **UI FrameWork에서 제공되는 일부 View는 고유 컨텐츠사이즈(Intrinsic Content Size)를 가지고 있으며 그 예는 UILabel, UIButton** 등이 있다. 
+  - UILabel, UIButton 등은 뷰의 속성(텍스트, 이미지)에 따라 크기가 결정 될 수 있는데 이 때 Intrinsic Content Size보다 작아지거나 커질 수가 있다. 
+  - 이때 **Content Hugging Priority는 크기가 늘어나는 것에 대해 저항하는 제약값, Content Compression Resistance는 크기가 줄어드는 것에 대해 저항하는 제약값** 이라고 한다. 
+  - **Content Compression Resistance - Content Hugging Priority - Autolayout Constraint Priority 간에도 우선순위가 존재**하는데 이 중 **Autolayout Constraint Priority가 최우선순위로 적용**된다. 
+
