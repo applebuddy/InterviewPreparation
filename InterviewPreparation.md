@@ -154,14 +154,48 @@
 
 뷰 컨트롤의 참조가 0이 되면 deinit()을 통해 뷰컨트롤러가 가지고 있던 뷰와 관련 자원들을 해제함으로서 완련히 ViewController의 생명주기가 끝나게 됩니다...
 
+
+
+<br><br>
+
+### # ARC 란 무엇인가요?
+
+- ARC는 Automactic Reference Counting의 약어이다.
+- ARC는 컴파일 시점에 동작하며 코드를 빌드(컴파일) 할 때 객체의 RC(Reference Count)를 추척하여 0이 되는 시점에는 자동으로 release 코드를 넣어 해제해주는 방식을 말한다. 
+
 <br><br>
 
 
 
-#### ARC 란 무엇인가요?
 
-- ARC는 Automactic Reference Counting의 약어이다.
-- ARC는 컴파일 시점에 동작하며 코드를 빌드(컴파일) 할 때 객체의 RC(Reference Count)를 추척하여 0이 되는 시점에는 자동으로 release 코드를 넣어 해제해주는 방식을 말한다. 
+
+### # 옵셔널이란 무엇인가요?
+
+- 강타입 언어인 Swift는 타입 안정성을 중요시한다. 그런 Swift언어에서 값이 없을 수(nil) 있음을 표현하는 것이 옵셔널이다. 
+- 옵셔널은 모나드의 일종이다. 
+- 옵셔널 변수는 끝에 ''?'' 키워드가 붙으며 이는 강제언래핑(!) or 옵셔널바인딩을 통해 옵셔널을 실제 있는 값으로 래핑하여 사용할 수 있다. 
+
+
+
+<br><br>
+
+
+
+### map, flatMap, compactMap의 차이점
+
+- Map 
+  - **Sequence 요소들을 지정한 작업으로 Mapping** 시킨다. -> 결과에 Optional 중첩이 생길 수 있다.  
+- FlatMap
+  - **filter { $0 != nil } + 시퀀스들을 합쳐서 반환**한다.
+  - map + flatten의 속성이 더해진 함수
+  - Non-nil 상태(Optional값이 아닌) 결과들을 갖는 배열을 리턴한다. 
+- CompactMap 
+  - **fillter { $0 != nil } + mapping 후 결과를 반환**한다.
+  - 1차원 배열 시퀀스에 대한 반환 결과는 FlatMap과 CompactMap이 동일하다. 
+
+
+
+
 
 <br><br>
 
