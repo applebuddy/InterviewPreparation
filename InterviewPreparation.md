@@ -562,6 +562,54 @@ queue.addOperation {
 
 
 
+### # associatedtype 
+
+- 일반적으로 변수가 특정 자료형으로 선언되면 그 이외의 자료형으로 동적으로 타입이 변할 수 없다. 
+  - 이때 타입을 동적으로 사용할 수 있도록 해주는 건이 associatedtype이다. 
+- associatedtype의 사용 예시)
+
+~~~ swift
+protocol B {}
+extension B {
+  	var description: String {
+      	return "Hello World"
+    }
+}
+
+protocol C {}
+extension C {
+		var debug: String {
+			return "Debug"
+    }
+}
+
+protocol A {
+  	associatedtype T: B, C // associatedtype을 사용해 B, C 프로토콜을 모두 준수하는 타입을 정의한다.  
+  	var name: T { get set } // protocol의 정의 프로퍼티 name은 B, C 프로토콜을 준수하는 + 읽기/쓰기가 가능한 T 타입으로 정의 된다.
+}
+ 
+extension A {
+  	mutating func set(name: T) {
+      	self.name = name
+    }
+  
+  	// T타입으로 정의 된 name은 프로토콜 B, C의 메서드를 모두 사용할 수 있다. 
+  	var desctription: String {
+      	return name.description
+    }
+  
+    var debug: String {
+      	return name.debug
+    }
+}
+~~~
+
+
+
+<br><br>
+
+
+
 ### # Collection 종류
 
 - BiDirectionalCollection
