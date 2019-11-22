@@ -181,7 +181,7 @@
 
 
 
-### map, flatMap, compactMap의 차이점
+### # map, flatMap, compactMap의 차이점
 
 - Map 
   - **Sequence 요소들을 지정한 작업으로 Mapping** 시킨다. -> 결과에 Optional 중첩이 생길 수 있다.  
@@ -195,7 +195,38 @@
 
 
 
+<br><br>
 
+### # MVC 패턴
+
+- **Model - View - Controller로 구성된 모델-뷰-컨트롤러 디자인패턴 기법**
+- **M/V/C 각자 역할** 
+  - **Model**
+    - **View와는 절대 소통하지 못한다.** 
+    - **사용자에게 보여주기 위한 Controller에 필요한 데이터를 제공**한다.
+      - **KVO/NotificationCenter,Singleton,constant struct 등을 통해 컨트롤러와 블라인드 소통**한다. 
+  - **View**
+    - **Model과는 절대 소통하지 못한다.** 
+    - **Controller와는 블라인드 상태로 소통**해야한다. 
+      - View는 Controller가 어떤목적의 Controller인지 알 수 없다.
+    - **Controllers에 제공되는 브라인드 소통 방법**
+      - **타겟 메서드** : **Controller에서** **@IBOutlet(아울렛), @IBAction(타겟메서드)등의 형태로 사용가능**하다.
+      - **델리게이트** : **Controller에서** **View요소의 delegate, dataSource 등을 self로 할당하여 사용가능**하다. 
+        - **View의 delegate변수에 weak 지정을 해주어 Controller self 참조의 의한 순환참조를 방지**할 수 있다. 
+  - **Controller**
+    - **Model로부터 KVO/NotificationCenter,Singleton 방법 등으로 상황에 따른 데이터를 받고 사용**한다. 
+    - **필요한 View에 대한 @IBOutlet, @IBAction, Delegation Pattern 등을 활용하여 블라인드로 소통**하며 사용할 수 있다. 
+
+- **MVC의 장점**
+  - **iOS 환경에서 기본적으로 제공하는 디자인패턴 기법**으로 **초보자도 이해하기 쉽고 빠르게 구현**하기 쉽다.
+  - **가벼운 프로젝트를 만드는데 유리**하다. 
+- **MVC의 단점**
+  - **Massive ViewController** 
+    - **비대해지는 뷰 컨트롤러**의 문제점
+    - **iOS에서 ViewController의 비중이 크고** 상대적으로 **ViewController만 유독 거대해질 가능성**이 있다.
+  - **Testability**
+    - 앞서 말했던 **Massive ViewController의 성질로 인해 Test하는데 있어 불편함**이 생길 수 있다. 
+    - 상대적으로 비대해지는 ViewController에 대한 유지보수의 문제점
 
 <br><br>
 
