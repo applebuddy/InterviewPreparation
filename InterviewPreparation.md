@@ -1,4 +1,4 @@
-
+****
 
 # 면접 질문 정리 
 
@@ -555,6 +555,49 @@ queue.addOperation {
     }
 }
 ~~~
+
+
+
+<br><br>
+
+
+
+### Core Graphics 란, 구성 요소
+
+- **Core Graphics의 의미**
+
+  - **iOS 뷰의 색상, 이미지, 그레디언트, 그림자, 레이어효과등을 내는데 처리하는데 사용**한다. 
+  - **좌표계 체계 데이터 구조, Coordinate System Data Structures**
+
+- **Core Graphics의 구성 요소**
+
+  - **CGFloat** 
+
+    - **드로잉 간 부동 소수점 좌표를 나타내는 기본타입**
+    - **드로잉을 하는 모든 지점은 모두 부동 소수점으로 표현**되며 이때 CGFloat타입을 사용한다. 
+
+  - **CGPoint**
+
+    - **두 개의 CGFloat 변수 x, y로 구성되는 구조체 타입**
+    - **CGFloat 기반 좌표로 점의 위치를 표현하는데 사용**한다. 
+
+  - **CGSize**
+
+    - **두 개의 CGFloat 변수 width, height로 구성되는 구조체 타입**
+    - **CGFloat 기반으로 크기를 표현하는데 사용**한다. 
+
+  - **CGRect**
+
+    - **점(CGPoint)과 크기(CGSize)를 조합해서 구성한 구조체 타입**
+    - **CGPoint, CGSize를 함께 갖고 있다.** 
+
+    ~~~ swift
+    // CGRect 구조체 구조
+    struct CGRect {
+      	var origin: CGPoint // 좌표를 표현하는 origin: CGPoint
+      	var size: CGSize // 크기를 표현하는 size: CGSize
+    }
+    ~~~
 
 
 
