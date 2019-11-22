@@ -27,18 +27,29 @@
 
 <br><br>
 
+### # 성취 해본 가장 인상적인 경험
 
+
+
+
+
+<br><br>
 
 # @ CS 기술 질문
 
 ### Sorting Methods, 정렬 방법
 
+- **안정정렬/불안정정렬****의 차이** : **같은 값이 존재할때 해당 값들의 인덱스 순서가 정렬 후에 유지될 수 있는지 여부에 따라 결정**된다. 
+
 - **퀵 정렬 (Quick Sort)**
   - 일반적으로 좋은 성능을 보이는 정렬방법, 비펏을 기준으로 비벗보다 작은값, 큰값을 양옆으로 비교하며 재귀, 분할정복방식으로 정렬을 수행한다. 
+  - 불안정 정렬
   - **최적의 상황에서 복잡도는 O(NlogN)** 이다.
     - 분발정복 알고리즘이 적용되어 정렬 체크구간이 쪼개질 수록 복잡도가 줄어든다.
   - **최악의 상황에서 복잡도는 O(N^2)** 이다.
     - **이미 정렬이 되어있는 상태에서 비펏이 양 끝에 위치할 경우 N^2번을 순회**하며 분할정복의 이점을 활용하지 못하기 때문이다. 
+- **병합 정렬 (Merge Sort)**
+  - 분할정복 정렬 알고리즘 기법 중 하나
 - **게수정렬(Counting Sort)**
   - 계수가능 범위에서 배열 인덱스를 이용해 요소를 정렬한다. 
   - **복잡도는 O(N)로 매우 효율적**이다.
@@ -46,6 +57,7 @@
     - 매우 큰 계수 범위에 대한 사용 제한
 - **힙 정렬 (Heap Sort)** 
   - Complete Binary Tree를 이용한 Heap 정렬
+  - 불안정 정렬
   - **일반 적인 복잡도는 O(NlogN)이다.**
 - **삽입 정렬 (Insert Sort)**
   - 인간이 기본적으로 정렬할때 사용하는 방법과 유사한 기법
@@ -248,7 +260,7 @@ class Zerg {
 
 <br><br>
 
-### # Escaping Closure의 개념
+### # Escaping Closure의 개념 
 
 - 메서드로 부터 전달받은 closure를 메서드의 LifeCycle에서 실행하여 끝내지 않고 closure 내부의 결과를 외부에 전달하고자 할 때 사용할 수 있다.
   - 콜백함수 같은 효과를 볼 수 있음
@@ -319,11 +331,30 @@ class Zerg {
 
 
 
+<br><br>
+
 ### # UIViewController 프로퍼티인 TopLayoutGuide, BottomLayoutGuide가 iOS11에서 deprecated된 이유와 대체수단
 
 - 아이폰X가 생기면서 안전영역에 대한 **SafeAreaLayoutGuide**가 생겼기 때문이다.
   - **SafeAreaLayoutGuide**는 기존 Top, Bottom LayoutGuide와 **다르게 안전한 컨텐츠 영역의 개념**으로 등장했다.
 - 기존 TopLayoutGuide, BottomLayoutGuide는 두개의 사각 영역으로 되어있는 GuideArea였던 반면, SafeAreaLayoutGuide는 좌/우/위/아래의 하나의 사각 영역으로 되어 있다. 
+
+
+
+<br><br>
+
+
+
+### # Timer 
+
+- 일정 주기마다 특정한 작업을 처리하기 위해 사용할 수 있음
+- scheduledTimer(withTimeInterval:, repeats:) { timer in ... } 
+  - 일정 주기별로 작업을 실행할 때 사용한다. 
+- 런루프에 등록이 되어 실행되며, invalidate 될 경우 nil이 되며 헤제된다. 
+- 만약 **타이머가 nil인데 fire()함수로 타이머를 사용하려고 하면 앱크래시가 발생할 수 있다.** 
+  - 그러므로 **이런 부분의 안정성을 확보하기 위해 weak키워드를 사용하는 것이 좋다.** 
+
+
 
 
 
@@ -357,9 +388,12 @@ class Zerg {
 
 <br><br>
 
+
+
 ### # UICollectionViewLayout클래스의 prepare 메소드 역할
 
 - **prepare 메서드는 UICollectionView의 Layout 연산이 일어날 때마다 호출**된다. 이때 셀 위치, 크기등에 대한 계산을 prepare 메소드에서 사전에 할 수 있다.
+- 
 
 <br><br>
 
@@ -372,8 +406,73 @@ class Zerg {
 
 
 
+### # appDelegate의 keyWindow 유무
+
+- **iOS12 까지는 AppDelegate의 단일 keyWindow 방식**을 갖고 있었다. 
+- -> **iOS13 부터는  appDelegate에만 단일 keyWindow를 갖고 있던 방식에서 SceneDelegate가 추가되면서 SceneDelegate 각각의 keyWindow**를 갖고있게 되었다.
+
+
+
+
+
+<br><br>
+
 ### # GCD의 사용법
 
-- GCD (Grand Central Dispatch)
+- **GCD (Grand Central Dispatch)**
   - DispatchQueue
+  - Queue와 동일하게 FIFO의 특징을 갖고 있다. 
+  - qos (qualify of service)
+    - userInteractive
+    - userInitiated
+    - Default
+    - utility
+    - backgound
+    - Unspecified
+- **Serial**
+  - 한번에 하나의 작업만 하는 queue
+  - 앞선 작업이 완전히 종료 되어야지만 다음 작업이 순차적으로 실행된다. 
+- **Concurrent**
+  - 동시에 여러작업을 수행하는 queue
+  - 앞선 작업이 실행되는 도중에도 뒤의 큐 작업이 동시에 실행된다. 
+- **DispatchQueue 사용 예시**
 
+~~~ swift
+
+// dispatchQueue test 
+let dispatchQueue = DispatchQueue(label: "min") // serial DispatchQueue 
+let dispatchQueue2 = DispatchQueue(label: "mingoon", attributes: .concurrent) // concurrent DispatchQueue
+
+// main 스레드에서 동작하는 비동기 DispatchQueue
+DispatchQueue.main.async {
+    print("mainQueue")
+}
+
+// 서브 스레드에서 작동하는 serial DispatchQueue
+// 다른 serial async 블록과의 관계 -> 블록 순차적으로 실행
+dispatchQueue.async {
+    // 스레드 8에서 작동
+    print("serial async")
+}
+
+// 서브 스레드에서 작동하는 concurrent DispatchQueue
+// 다른 concurrent async 블록과의 관계 -> 앞선 블록 작업 종료와 관계없이 동시에 실행 
+dispatchQueue2.async {
+    // 스레드 3에서 작동
+    print("concurrent async")
+}
+~~~
+
+
+
+<br><br>
+
+### # Collection 종류
+
+- BiDirectionalCollection
+  - 양방향 컬렉션
+    - count 속도가 랜덤 접근 컬렉션보다 느리다. **복잡도 O(N)**
+
+- RandomAccessCollection
+  - 랜덤 접근 컬렉션
+    - count 속도가 복잡도 **O(1)**
