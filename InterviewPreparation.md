@@ -1,3 +1,5 @@
+
+
 # 면접 질문 정리 
 
 - 면접에 나올 수 있는 기초 질문에 대한 답변 정리
@@ -417,7 +419,7 @@ class Zerg {
 
 <br><br>
 
-### # GCD의 사용법
+### # GCD란?, 사용법
 
 - **GCD (Grand Central Dispatch)**
   - DispatchQueue
@@ -467,12 +469,42 @@ dispatchQueue2.async {
 
 <br><br>
 
+
+
+### OperationQueue란?, 사용법 
+
+- Cocoa operation은 비동기적으로 수행하고자 하는 작업을 캡슐화하는 객체지향적 방법(object-oriented way)이다.
+- **Objective-C 기반으로 OS X 및 Cocoa 기반 앱에서도 사용 가능**하다. 
+- **OperationQueue는 DispatchQueue보다 좀더 객체 지향적인 비동기 프로그래밍을 구현해야할 때 사용**한다. 
+- **Operation 작업 간 각각 or 전체 Operation에 대한 전체 실행취소가 가능**하다. 
+  - **개별 Operation 취소 : cancel()**
+  - **전체 Operation에 대한 작업 취소 : cancelAllOperation()**
+
+- **OperationQueue의 사용방법**
+
+~~~ swift
+let queue = OperationQueue() // OperationQueue의 생성 및 할당 
+queue.addOperation {
+  	for index in 1...100 {
+      	print("applebuddy\(index)") // prints 1...100
+    }
+}
+~~~
+
+
+
+<br><br>
+
+
+
 ### # Collection 종류
 
 - BiDirectionalCollection
   - 양방향 컬렉션
     - count 속도가 랜덤 접근 컬렉션보다 느리다. **복잡도 O(N)**
+  - swift의 String 자료형에 사용된다.
 
 - RandomAccessCollection
   - 랜덤 접근 컬렉션
     - count 속도가 복잡도 **O(1)**
+  - swift의 배열, C++의 벡터, 배열 등에 사용한다. 
