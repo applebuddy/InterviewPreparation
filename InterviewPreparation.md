@@ -167,13 +167,73 @@
 
 
 
+<br>
+
 
 
 ## # 데이터베이스
 
+### ## 데이터베이스 문법
+
+- **SELECT** [열]
+
+  - **특정 열을 선택하는데 사용**한다. **(필수)**
+
+- **FROM** [테이블]
+
+  - **특정 테이블을 조회할 때 사용**한다. **(필수)**
+  - **"A" 테이블의 전체열 조회 예시 ▼**
+
+  ~~~ sql
+  SELECT * FROM "A" 
+  ~~~
+
+  
+
+- **WHERE** [조건]
+  - 특정 조건에 따라 조회할 때 사용한다. (선택)
+
+- **GROUP BY**
+
+  - **동일한 값을 가진 데이터를 집계해서 조회하고자 할 때 사용**하는 문장 (선택)
+
+- **ORDER BY**
+
+  - **오름차순(ascribing) or 내림차순(describing)으로 정렬할때 사용**하는 문법
+
+  ~~~ sql
+  SELECT NAME, COUNT(NAME) FROM TABLE
+  FROM CART_PRODUCTS GROUP BY CART_ID ORDER BY COUNT(NAME);
+  ~~~
+
+  
+
+<br>
+
 ### ## 데이터베이스 용어정리
 
+- **NoSQL**
+  - Not Only SQL의 약자, 기존의 RDBMS와 다른 형태의 데이터로 저장하는 기술
+  - 트랜잭션을 지원하지 않는다.
 
+- **트랜젝션**
+  - 데이터베이스 내에서 한꺼번에 수행되어야 할 일련의 연산집합
+  - **트랜잭션은 데이터베이스의 논리적 연산단위**이다.
+- **DDL** (Data Definition Language)
+  - 데이터 정의 언어
+  - 데이터베이스 스키마를 정의 or 조작하기 위해 사용한다. 
+  - CREATE, ALTER, DROP, TRUNCATE 등이 있다. 
+- **DML** (Data Manipulation Language)
+  - 데이터 조작 언어, 데이터를 조작하기 위해 사용한다. 
+  - SELECT, INSERT, DELETE, UPDATE
+- **DCL** (Data Control Language)
+  - 데이터 제어언어
+  - 데이터의 보안, 무결성 등을 정의하는데 사용한다. 
+  - COMMIT, ROLLBACK, GRANT, REVOKE
+- **DQL** (Data Query Language)
+  - SELECT만을 따로 분리해서 쿼리로 표현하는 언어
+- **TCL** (transaction Control Language)
+  - 트랜젝션 제어 언어
 
 <br><br>
 
