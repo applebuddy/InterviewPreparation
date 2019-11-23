@@ -715,3 +715,41 @@ extension A {
 
 
 <br>
+
+
+
+### # 예약어 문법
+
+- **Defer**
+
+  - 해당 블럭을 벗어날 때 실행할 작업을 블록  내에서 앞서 지정할 수 있다. 
+
+  ~~~swift
+  // defer 활용 예시)
+  func deferTest() {
+    	defer { print("3") }
+    	print("1")
+    	print("2")
+  }
+  
+  defer() // "1" \n "2" \n "3"
+  ~~~
+
+- **Assert**
+
+  - **디버깅 모드에서 특정 조건을 만족시키는지 확인 후, 조건을 성립하지 않으면 크래시를 발생**시킨다.
+  - **디버깅 모드에서만 동작하며 애플리케이션에서는 해당 내용을 제외**한다.
+    - **배포 환경에서도 동작하는 메서드는 precondition(_:file:line:)** 이 있다.
+
+  ~~~ swift
+  // Assert 활용 예시)
+  var someInt: Int = 0
+  
+  // Assert를 사용해 검증 조건을 체크한다. 문제가 없으면 그대로 행을 지나간다. 
+  assert(someInt == 0, "someInt is Not a Zero!!")
+  // Assert로 조건 검증 시 문제가 있으면 문구를 출력하고 동작 중지
+  assert(someInt != 0, "someInt is a Zero!!")
+  
+  ~~~
+
+  
