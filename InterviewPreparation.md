@@ -44,14 +44,61 @@
 - **안정정렬/불안정정렬****의 차이** : **같은 값이 존재할때 해당 값들의 인덱스 순서가 정렬 후에 유지될 수 있는지 여부에 따라 결정**된다. 
 
 - **퀵 정렬 (Quick Sort)**
-  - 일반적으로 좋은 성능을 보이는 정렬방법, 비펏을 기준으로 비벗보다 작은값, 큰값을 양옆으로 비교하며 재귀, 분할정복방식으로 정렬을 수행한다. 
-  - 불안정 정렬
+  - **평균적으로 단일 정렬기법 중 가장 좋은 성능을 보이는 정렬방법**, **비펏을 기준으로 피벗보다 작은값, 큰값을 양옆으로 비교하며 재귀, 분할정복방식으로 정렬을 수행**한다. 
+  - **파티션, 분할정복을 활용**한다. 
+  - 같은 값의 인덱스 위치가 바뀔 수 있는 불안정 정렬
   - **최적의 상황에서 복잡도는 O(NlogN)** 이다.
     - 분발정복 알고리즘이 적용되어 정렬 체크구간이 쪼개질 수록 복잡도가 줄어든다.
   - **최악의 상황에서 복잡도는 O(N^2)** 이다.
     - **이미 정렬이 되어있는 상태에서 비펏이 양 끝에 위치할 경우 N^2번을 순회**하며 분할정복의 이점을 활용하지 못하기 때문이다. 
+  
+  ~~~ swift
+  // MARK: - QuickSort Example with Swift
+  import Foundation
+  
+  func quickSort(_ arr: inout [Int], _ start: Int, _ end: Int) {
+      if start >= end { return } // 원소가 한 개인 경우 바로 종료
+      
+      let key = start // 키는 첫번째 원소
+      var i = start + 1
+      var j = end
+      var temp = 0
+      
+      while i <= j { // 엇갈릴 때 까지 반복
+          while arr[i] <= arr[key] {
+              i += 1
+          }
+          
+          while arr[j] >= arr[key] && j > start {
+              j -= 1;
+          }
+          
+          if i > j {
+              temp = arr[j]
+              arr[j] = arr[key]
+              arr[key] = temp
+          } else {
+              temp = arr[i]
+              arr[i] = arr[j]
+              arr[j] = temp
+          }
+      }
+      
+      quickSort(&arr, start, j-1)
+      quickSort(&arr, j+1, end)
+  }
+  
+  var arr = [3,1,5,4,2,6,9,7,8,0]
+  quickSort(&arr, 0, arr.count-1) // 퀵정렬에 의해 오름차순 정렬이 된다.
+  print(arr) // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  
+  ~~~
+
+<br>
+
 - **병합 정렬 (Merge Sort)**
-  - 분할정복 정렬 알고리즘 기법 중 하나
+  - 퀵정렬과 함께 분할정복 정렬 알고리즘 기법 중 하나
+  - 안정 정렬
 - **게수정렬(Counting Sort)**
   - 계수가능 범위에서 배열 인덱스를 이용해 요소를 정렬한다. 
   - **복잡도는 O(N)로 매우 효율적**이다.
@@ -664,3 +711,7 @@ extension A {
   - 랜덤 접근 컬렉션
     - count 속도가 복잡도 **O(1)**
   - swift의 배열, C++의 벡터, 배열 등에 사용한다. 
+
+
+
+<br>
