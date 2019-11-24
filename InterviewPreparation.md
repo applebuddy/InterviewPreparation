@@ -45,7 +45,7 @@
 
 ### ## Sorting Methods, 정렬 방법
 
-- **안정정렬/불안정정렬****의 차이** : **같은 값이 존재할때 해당 값들의 인덱스 순서가 정렬 후에 유지될 수 있는지 여부에 따라 결정**된다. 
+- **안정정렬/불안정정렬의 차이** : **같은 값이 존재할때 해당 값들의 인덱스 순서가 정렬 후에 유지될 수 있는지 여부에 따라 결정**된다. 
 
 - **퀵 정렬 (Quick Sort)**
   - **평균적으로 단일 정렬기법 중 가장 좋은 성능을 보이는 정렬방법**, **비펏을 기준으로 피벗보다 작은값, 큰값을 양옆으로 비교하며 재귀, 분할정복방식으로 정렬을 수행**한다. 
@@ -826,6 +826,51 @@ extension A {
   - 랜덤 접근 컬렉션
     - count 속도가 복잡도 **O(1)**
   - swift의 배열, C++의 벡터, 배열 등에 사용한다. 
+
+<br>
+
+
+
+### Static Dispatch, Dynamic Dispatch
+
+- iOS의 Swift 또한 다른 객체지향 언어들처럼 오버라이딩을 지원한다. 오버라이딩을 할때 프로그램을 실제 호출할 함수가 어떤 것인지를 결정하는 과정이 필요하다.
+
+~~~ swift
+class Parent {
+  	func someMethod() {
+      	// 부모 클래스의 someMethod 메서드 구현 
+    }
+}
+
+class Child: Parent {
+  	override func someMethod() {
+      	// 자식 클래스의 someMethod 메서드 구현
+    }
+}
+
+let object: Parent = Child()
+object.someMethod() 
+// 이때 Parent의 someMethod를 호출할 것인가, Child의 someMethod를 호출할 것인가?
+// 그 여부는 Static Dispatch(Direct Call) vs Dynamic Dispatch(Indirect Call) 여부에 따라 결정 된다. 
+~~~
+
+<br>
+
+- **Static Dispatch** (Direct Call)
+  - **Static Dispatch 방법은 변수의 명목상 타입을 기준으로 메소드와 프로퍼티를 참조**한다. 
+  - **참조할 요소를 컴파일 타임에 결정하므로 성능상의 이점**을 갖는다. 
+  - 자식클래스의 오버라이딩 메서드를 호출하려면 명시적인 타입 캐스팅을 해주어야 한다.
+    - ex) **C++의 경우 정적바인딩이 원칙**이므로 **virtual 키워드를 사용해야만 서브클래스의 오버라이딩 메서드를 사용 가능**하다. 
+    - **다형성을 활용하기 어려운 단점**이 있다. 
+
+- **Dynamic Dispatch** (Indirect Call)
+  - **Swift에서 채택해서 사용하는 Dynamic Dispatch 방식**
+  - **변수의 실제 타입에 맞춰서 메서드와 프로퍼티를 호출**한다.
+  - **실제 참조 될 요소는 런타임 중에 결정**된다.
+  - **어떤 서브클래스에 접근해도 실제 타입에 맞는 요소를 참조하여 실행하기 때문에 다형성 구현에 용이**하다.
+  - **런타임 중 작업이 있으므로 Static Dispatch에 비해 성능상으론 손해보는 단점**이 있다.
+
+
 
 <br>
 
