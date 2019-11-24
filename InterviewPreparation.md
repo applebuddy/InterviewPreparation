@@ -43,21 +43,18 @@
 
 ## # 알고리즘
 
+## ## 자료구조
 
+### **연결리스트 (Linked List)**
 
-### ## 자료구조
-
-- **연결리스트** (Linked List)
-  - **선형적으로 단방향으로 연결된 값의 컬렉션**
-  - **각각의 노드는 값과 next 포인터를 갖고 있다.** 
-  - **Head Node 추가 시 제외한 일반적인 추가, 삭제 등의 시간복잡도는 O(N)으로 비효율** 적인 편인 자료구조
+- **선형적으로 단방향으로 연결된 값의 컬렉션**
+- **각각의 노드는 값과 next 포인터를 갖고 있다.** 
+- **Head Node 추가 시 제외한 일반적인 추가, 삭제 등의 시간복잡도는 O(N)으로 비효율** 적인 편인 자료구조
+- **연결리스트, Linked List 구현 예시 ▼**
 
 ~~~ swift
 
 // MARK: Implementation of LinkedList in Swift
-
-import Foundation
-
 // MARK: - Node Definition
 public class Node<T> {
     public var value: Int
@@ -91,9 +88,97 @@ print(node1.description)
 
 ~~~
 
-<br>
+<br><br>
 
+### **이진트리, Binary Tree**
 
+- **각각 0~2개의 노드를 갖는 이진트리 자료구조**
+- **각 노드는 leftChild?, rightChild?, 자신의 value를 갖는다.** 
+- **모든 노드가  leftChild, rightChild를 갖는 트리를 Full Tree** 라고 한다. 
+- **Full Tree 상태 + 최하위 노드가 몇개 비어있는 경우에는 작은 의미로  Complete Binary Tree**라고 하며, Heap 자료구조로서 활용될 수 있다.
+- **InOrder** 
+  - **트리를 최 좌측 부터 우측 순으로 차례대로 출력**하는 순서 방식 
+  - **중간에 RootNode의 순서**가 온다. 
+  - **처음에 RootNode의 leftChild를 순회하는 재귀호출 -> rootNode 값을 출력 -> rightChild를 순회하는 재귀호출**
+- **PreOrder**
+  - **처음에 RootNode의 순서**가 온다.
+  - **처음에 RootNode 값을 출력 -> leftChild를 순회하며 출력하는 재귀 호출 -> rightChild를 순회하며 출력하는 재귀 호출**
+- **PostOrder**
+  - **마지막에  RootNode의 순서**가 온다.
+  - **처음에 leftChild를 순회하며 출력하는 재귀호출 -> rightChild를 순회하며 출력하는 재귀호출 -> 마지막에 RootNode 값을 출력**
+- **이진트리, Binary Tree 구현 예시 ▼**
+
+~~~ swift
+// MARK: - 이진트리, Binary Tree Example
+
+public class BinaryTreeNode<T> {
+    public var value: T
+    public var leftChild: BinaryTreeNode? // 왼쪽 자식노드
+    public var rightChild: BinaryTreeNode? // 오른쪽 자식노드
+    public init(value: T) {
+        self.value = value
+    }
+    
+    // In-Order 탐색
+    public func traverseInOrder(visit: (T) -> ()) {
+        leftChild?.traverseInOrder(visit: visit)
+        visit(value) // 값을 받아 실행하는 반환값 없는 클로저가 실행되는데 이때의 값은 순회중인 현재 인스턴스의 value가 된다.
+        rightChild?.traverseInOrder(visit: visit)
+    }
+    
+    public func traversePreOrder(visit: (T) -> ()) {
+        visit(value)
+        leftChild?.traversePreOrder(visit: visit)
+        rightChild?.traversePreOrder(visit: visit)
+    }
+    
+    public func traversePostOrder(visit: (T) -> ()) {
+        leftChild?.traversePostOrder(visit: visit)
+        rightChild?.traversePostOrder(visit: visit)
+        visit(value)
+    }
+}
+
+let rootTree = BinaryTreeNode<Int>(value: 0)
+let one = BinaryTreeNode<Int>(value: 1)
+let two = BinaryTreeNode<Int>(value: 2)
+let three = BinaryTreeNode<Int>(value: 3)
+let four = BinaryTreeNode<Int>(value: 4)
+let five = BinaryTreeNode<Int>(value: 5)
+
+rootTree.leftChild = one
+rootTree.rightChild = two
+one.leftChild = three
+one.rightChild = four
+two.leftChild = five
+
+// traverseInOrder의 처음이자 마지막 매개변수는 값을 받아 실행하는 클로져였다.
+// 마지막 매개변수이므로 해당 클로져는 후행클로져 형태로 넣어 아래와 같이 실행할 수 있다.
+// 현재 구성한 트리의 상태 ▼
+
+//.        0 <- Root Node
+//.    1       2  <- Sub Node
+//.  3   4   5
+
+// InOrder 출력 결과 -> 3 1 4 0 5 2
+print("traverseInOrder Result ▼")
+rootTree.traverseInOrder { print($0, terminator: "->") }
+print()
+print("traversePreOrder Result ▼")
+rootTree.traversePreOrder { print($0, terminator: "->") }
+print()
+print("traversePostOrder Result ▼")
+rootTree.traversePostOrder { print($0, terminator: "->") }
+
+// traverseInOrder Result ▼
+// 3->1->4->0->5->2->
+// traversePreOrder Result ▼
+// 0->1->3->4->2->5->
+// traversePostOrder Result ▼
+// 3->4->1->5->2->0->
+~~~
+
+<br><br>
 
 ### ## Sorting Methods, 정렬 방법
 
