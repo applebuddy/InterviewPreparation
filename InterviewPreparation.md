@@ -674,6 +674,71 @@ class Zerg {
 
 <br><br>
 
+### # 프로토콜 Protocol
+
+- Struct, Class , Enum과 함께 스위프트의 자료구조를 형성하는 네번째 기둥
+  - 별도의 세부 구현이 없는 메서드, 프로퍼티로 구성하고 있는 하나의 일급 타입
+  - 실제 구현이 아닌 순수한 선언형태를 갖고 있다. 
+  - class만 취급하는 프로토콜의 경우 : class로 class에서만 사용하도록 지정할 수 있다. 
+- Swift 내 문자열, 배열 등 많은 것들이 프로토콜을 사용하고 있으며, 이들의 기초가 되고 있다.
+- 다중상속을 지원하지 않는 Swift에서 **다중상속과 같은 효과, Controller-View 간 Delegation 블라인드 소통 기능** 등 다양한 곳에 사용할 수 있다. 
+
+~~~ swift
+// 프로토콜의 선언 예시)
+protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
+  	var someProperty: Int { get set } // 읽기(get), 쓰기(set)이 가능한 가변 프로퍼티, someProperty
+  	func aMethod(arg1: Double, anotherArgument: String) -> SomeType
+  	optional func optionMethod() // protocol 메서드 앞에 optional을 붙여주면 해당 프로토콜을 채택받아도 해당 메서드를 선택적으로 구현할 수 있도록 할 수 있다. 
+  	mutating func changeIt() // 만약 : class를 AProtocol에 붙여주면 mutating을 붙여줄 필요가 없어진다. 
+  	init(arg: Type)
+}
+~~~
+
+<br><br>
+
+### # 열거형 Enum
+
+- Class, Struct와 더불어 **Swift 데이터 구조의 일종인 Enum**
+- Struct와 동일한 **값 타입의 데이터 타입**
+- 메서드, 변수 등을 가질 수 있지만 연동자료 따로 갖고 있지는 않다.
+  - enum 내 연동자료들을 제외하고는 저장공간을 갖고 있지 않다.
+  - **case let 을 통해 enum case에 따른 연동자료를 얻도록 할 수 있다.** 
+- **Swift의 enum은 다른 언어에 비해 매우 강력**하다. 
+  - **enum 각각의 case들이 연동된 데이터 값을 가질 수 있기 때문**이다. 
+  - Optional도 none, some의 case로 이루어진 enum으로 구성되어진다. 
+
+~~~ swift
+// enum의 멤머 프로퍼티 + switch self를 활용한 case 별 연동자료 흭득 에시
+enum Food {
+    case banana(Int)
+    case icecream(Int)
+    case potato(Int)
+    
+    // enum case에 따른 내의 저장프로퍼티(price)의 값을 다양하게 줄 수 있다.
+    var price: Int {
+        // 인자값에 따른 케이스 별 연동자료를 반환받을 수 있다.
+        switch self {
+        case let .banana(value):
+            return value*10
+        case let .icecream(value):
+            return value*3
+        case let .potato(value):
+            return value*5
+        }
+    }
+}
+
+// 같은 enum 타입의 객체라도 rawValue 값에 따른 연동자료의 결과값이 다양하게 나올 수 있다.
+var icecream: Food = Food.icecream(3) // return 3 * 3
+var potato = Food.potato(6) // return 6 * 5
+var banana = Food.banana(2) // return 2 * 10
+print("total icecream price : \(icecream.price)") // 9
+print("total potato price : \(potato.price)") // 30
+print("total banana price : \(banana.price)") // 20
+~~~
+
+<br><br>
+
 
 
 ### # Frame - Bounds의 차이
@@ -1044,6 +1109,8 @@ object.someMethod()
 <br>
 
 
+
+<br>
 
 ### # 예약어 문법
 
