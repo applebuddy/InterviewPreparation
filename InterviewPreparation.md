@@ -43,6 +43,58 @@
 
 ## # 알고리즘
 
+
+
+### ## 자료구조
+
+- **연결리스트** (Linked List)
+  - **선형적으로 단방향으로 연결된 값의 컬렉션**
+  - **각각의 노드는 값과 next 포인터를 갖고 있다.** 
+  - **Head Node 추가 시 제외한 일반적인 추가, 삭제 등의 시간복잡도는 O(N)으로 비효율** 적인 편인 자료구조
+
+~~~ swift
+
+// MARK: Implementation of LinkedList in Swift
+
+import Foundation
+
+// MARK: - Node Definition
+public class Node<T> {
+    public var value: Int
+    public var next: Node?
+    
+    public init (value: Int, _ next: Node? = nil) {
+        // 두번째 매개변수는 만약 지정되지 않았을 때 default값을 nil로 주도록 설정한다.
+        self.value = value
+        self.next = next
+    }
+}
+
+// MARK: - Prints Node Data
+extension Node: CustomStringConvertible {
+    public var description: String {
+        guard let next = next else {
+            return "\(value)" // 다음 노드가 없다면 현재 값만 출력한다.
+        }
+        
+        // 다음 노드(next)가 존재한다면 guard let 이후 코드도 실행된다. -> 다음 노드도 출력한다.
+        return "\(value) -> \(String(describing: next)) "
+    }
+}
+
+let node1 = Node<Int>(value: 1)
+let node2 = Node<Int>(value: 3)
+let node3 = Node<Int>(value: 5)
+node1.next = node2
+node2.next = node3
+print(node1.description)
+
+~~~
+
+<br>
+
+
+
 ### ## Sorting Methods, 정렬 방법
 
 - **안정정렬/불안정정렬의 차이** : **같은 값이 존재할때 해당 값들의 인덱스 순서가 정렬 후에 유지될 수 있는지 여부에 따라 결정**된다. 
@@ -244,6 +296,15 @@
 
 
 ## # 데이터베이스
+
+
+
+### ## DBMS
+
+- 데이터베이스 관리 시스템 (Database Management System)
+  - 다수의 사용자들이 DB 내의 데이터를 접근할 수 있도록 해주는 SW도구의 집합
+
+
 
 ### ## 데이터베이스 문법
 
