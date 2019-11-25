@@ -458,6 +458,25 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
 
 
 
+
+
+# @ iOS 동향 질문
+
+- iOS13 버전의 중요 업데이트 내용
+  - 다크모드 (DarkMode) 지원
+  - 사진앱의 AI기술을 활용한 정렬기능 도입
+    - 사진 간 연관성 분석을 하여 사용자에게 알맞는 정렬을 보여주도록 함
+    - 사진들을 분석해서 연도별, 테마별 인생에서 가장 중요한 순간들을 정리하여 분류
+  - 애플 소셜 로그인 지원
+    - 애플 소셜 로그인 API 공개
+    - 로그인을 시도하면 별다른 입력 절차 없이 Face ID를 이용해서 로그인이 가능, 세부 개인정보 공개 설정이 가능하다.
+  - 씬델리게이트 SceneDelegate 추가 
+  - Opaque type, property Wrapper 추가
+
+<br><br>
+
+
+
 # @ Swift 기술 질문
 
 ### # 애플리케이션 Life Cycle
@@ -854,17 +873,17 @@ class Zerg {
 
 
 
-### # strong, weak, unowned 키워드의 의미와 차이는 무엇인가요?
+### # strong, weak, unowned 키워드의 의미와 차이
 
-- Strong 
+- **Strong** 
 
-  - 기본적으로 default는 strong으로 지정된다. 
+  - **기본적으로 default는 strong으로 지정**된다. 
 
-  - strong 키워드로 선언된 멤버는 할당되는 순간 AC(Reference Count)를 증가시키고 1로 시작한다. 
+  - **strong 키워드로 선언된 멤버는 할당되는 순간 AC(Reference Count)를 증가시키고 1로 시작**한다. 
 
-  - RC를 증가시켜 ARC 사용 간 메모리 해제를 피하고 객체를 안전하게 사용하고자 할 때 사용한다. 
+  - **RC를 증가시켜 ARC 사용 간 메모리 해제를 피하고 객체를 안전하게 사용하고자 할 때 사용**한다. 
 
-  - 예를 들어 A라는 메서드에 a라는 레퍼런스 객체를 생성 (1 + 1 == 2) -> A 메서드 내에서 사용하고 A메서드가 종료하더라도 (2 - 1 == 1) RC는 0이 되지 않아 이후 다른 곳에서도 해제되지않고 해당 객체의 사용이 가능해진다. 
+  - Ex) **A라는 메서드에 a라는 레퍼런스 객체를 생성 (1 + 1 == 2) -> A 메서드 내에서 사용하고 A메서드가 종료하더라도 (2 - 1 == 1) RC는 0이 되지 않아 이후 다른 곳에서도 nil로 해제되지않고 해당 객체의 사용이 가능**해진다. 
 
     - 다만 Closure 내에서 strong self 멤버를 사용 시, Closure Capturing 등의 문제 상황이 발생할 수 있어 주의가 필요하다. 
 
@@ -886,55 +905,56 @@ class Zerg {
     } // a Reference Count 2-1 == 1
     ~~~
 
-- weak 
-  - 객체가 할당 될 때 RC를 증가시키지 않는다. 또한 weak 키워드는 Optional에만 적용이 된다. ARC에 의해 AC가 0이 되면 해당 메모리는 해제되고 nil이 된다. 
-  - 클로저 내 상호참조로 인한 Closure Capturing을 해결할 수 있는 방법 중 하나이다. 
-  - 비교적 Life Cycle이 짧은 경우에 사용한다. 
+- **weak** 
+  
+  - **객체가 할당 될 때 RC를 증가시키지 않는다. 또한 weak 키워드는 Optional에만 적용이 된다. ARC에 의해 AC가 0이 되면 해당 메모리는 해제되고 nil**이 된다. 
+  - **클로저 내 상호참조로 인한 Closure Capturing을 해결할 수 있는 방법 중 하나**이다. 
+- **비교적 Life Cycle이 짧은 경우에 사용**한다. 
+  
+- **Unowned**
+  
+  - **객체가 할당 될 때 RC를 증가시키지 않는다.** 그러나 **weak 멤버와 달리 Non-Optional로 선언**되어야 하며, **ARC에 의해 메모리 해제가 된 후에도 해당 메모리의 값을 있는것으로 인지**하며 이 **해당 멤버가 nil인데 접근할 경우 앱 크래시가 발생**할 수 있다. 
+  - **해당 객체의 Life Cycle이 명확하다고 개발자에 의해 판단이 서는 경우**, **weak 대신 사용하여 옵셔널 바인딩 등의 과정을 거치지 않고 보다 간결한 코딩이 가능**해진다. 
 
-- Unowned
-  - 객체가 할당 될 때 RC를 증가시키지 않는다. 그러나 weak 멤버와 달리 Non-Optional로 선언되어야 하며, ARC에 의해 메모리 해제가 된 후에도 해당 메모리의 값을 있는것으로 인지하며 이 상황에 해당 메모리를 참조할 경우 앱 크래시가 발생할 수 있다. 
-  - 해당 객체의 Life Cycle이 명확하고 개발자에 의해 판단이 서는 경우, weak 대신 사용하여 옵셔널 바인딩 등의 과정을 거치지 않고 보다 간결한 코딩이 가능해진다. 
 
 
+#### # Weak, unowned의 용도와 차이점
 
-#### - Weak, unowned의 용도와 차이점
-
-- weak은 해당 값이 nil일 수도 있어 nil일 경우 해당 내용을 실행하지 않음으로서 클로져 캡쳐링을 방지한다. 
+- **weak은 해당 값이 nil일 수도 있어 nil일 경우 해당 내용을 실행하지 않음으로서 클로져 캡쳐링을 방지**한다. 
   - ARC 카운트가 0이 되면 nil로 바꿔주는 런타임 작업이 존재한다.
-- unowned는 해당 멤버가 반드시 존재한다고 가정, 만약 힙에 해당 멤버가 없으면 런타임 중 앱 크래시를 발생시킴으로서 클로져 캡쳐링을 방지한다.
-  - weak와 달리 unowned에서는 ARC 카운트가 0이 되면 nil로 바꿔주는 런타임 작업이 않는다.
+- **unowned는 해당 멤버가 반드시 존재한다고 가정, 만약 힙에 해당 멤버가 없으면 런타임 중 앱 크래시를 발생**시킴으로서 **클로져 캡쳐링을 방지**한다.
 
 <br><br>
 
 ### # IBOutlet의 weak 사용 여부 문제
 
-- iOS6 버전 까지는 앱 실행 간 메모리 부족문제가 발생할때 시스템이 임의로 viewWillUnload, viewDidUnload 함수를 사용하여 뷰를 해제했으나 이때 @IBOutlet 멤버의 경우 weak 설정이 되지 않으면 시스템이 뷰를 해제했으나 사용하지 않는 뷰가 ARC 해제되지않고 남아있게 되는 문제가 있을 수 있었다.
-- iOS6 이후부터는 시스템이 뷰의 해제에 임의로 관여하지 않고 대신 개발자가 didReceiveMemoryWarning()에서 메모리 부족 상황의 작업을 처리할 수 있게 됨으로서 @IBOutlet의 별도 weak 설정이 필요없게 되었다. 
-- 그렇게 시스템이 메모리 부족 상황에 대한 임의적 뷰 메모리 해제에 관여하지 않게 됨으로서 뷰 헤제에 시스템이 사용하던 viewWilllUnload / viewDidUnload는 필요없게 되었다. (deprecated)
+- **iOS6 버전 까지**는 **앱 실행 간 메모리 부족문제가 발생할때 시스템이 임의로 viewWillUnload, viewDidUnload 함수를 사용하여 뷰를 해제**했으나 이때 **@IBOutlet 멤버 등의 경우 weak 설정이 되지 않으면 시스템이 뷰를 해제했으나 사용하지 않는 뷰가 ARC에 의해 해제되지않고 남아있게 되는 문제**가 있을 수 있었다.
+- **iOS6 이후**부터는 **시스템이 뷰의 해제에 임의로 관여하지 않고 대신 개발자가 didReceiveMemoryWarning()에서 메모리 부족 상황의 작업을 처리할 수 있게 됨**으로서 **@IBOutlet의 별도 weak 설정이 필요없게 되었다.** 
+- 그렇게 시스템이 메모리 부족 상황에 대한 임의적 뷰 메모리 해제에 관여하지 않게 됨으로서 뷰 해제에 시스템이 사용하던 viewWilllUnload / viewDidUnload는 필요없게 되었다. (deprecated)
 
 <br><br>
 
 ### # Escaping Closure의 개념 
 
-- 메서드로 부터 전달받은 closure를 메서드의 LifeCycle에서 실행하여 끝내지 않고 closure 내부의 결과를 외부에 전달하고자 할 때 사용할 수 있다.
-  - 콜백함수 같은 효과를 볼 수 있음
-- 해당 메서드의 호출이 끝난 이후에도 closure는 메모리 어딘가에 저장되어 있어야하는데 이때 상황에 따라 weak 멤버등의 사용이 필요할  수 있음을 고려해야한다. 
-- @escaping이 명시되어있지 않은 경우 일반적으로 non-escaping closure이며, 메서드 실행의 종료 이전에 closure의 사용이 모두 완료됨을 보장할
-  - Non-escaping closure의 경우 weak 없이도 안전하게 사용할 수 있다. 
+- **메서드로 부터 전달받은 closure를 메서드의 LifeCycle내에서 끝내지 않고 closure 내부의 결과를 외부에 전달하고자 할 때 사용**할 수 있다.
+  - **콜백함수 같은 효과**를 볼 수 있음
+- 해당 **메서드의 호출이 끝난 이후에도 closure는 메모리 어딘가에 저장되어 있어야하는데 이때 상황에 따라 weak 멤버등의 사용이 필요할 수 있음을 고려**해야한다. 
+- **@escaping이 명시되어있지 않은 경우 일반적으로 non-escaping closure**이며, **non-escaping closure는 메서드 실행의 종료 이전에 closure의 사용이 모두 완료됨을 보장한다.**
+  - **Non-escaping closure의 경우 weak 없이도 안전하게 사용할 수 있다.** 
 
 <br><br>
 
 ### # as, as?, as! 의 차이
 
 - as
-  - 컴파일러가 타입의 성공을 보장하는 타입캐스팅 방법
-  - 컴파일 타임에 캐스팅 가능/불가능 여부를 확인 가능하다.
+  - **컴파일러가 타입의 성공을 보장하는 타입캐스팅 방법**
+  - **컴파일 타임에 캐스팅 가능/불가능 여부를 확인 가능**하다.
 - as? 
-  - 타입 변환에 실패할 경우 nil을 리턴한다. 
+  - **타입 변환에 실패할 경우 nil을 리턴**한다. 
   - 컴파일 타임에 캐스팅 가능/불가능 여부를 확인 불가(Xcode IDE에선 가능)
 
 - as!
-  - 타입 변환에 실패할 경우 앱 크래시가 발생한다. 
+  - **타입 변환에 실패할 경우 앱 크래시가 발생**한다. 
   - 컴파일 타임에 캐스팅 가능/불가능 여부를 확인 불가(Xcode IDE에선 가능)
 - ☆ Xcode 등의 일부 IDE에서는 정적 코드검사를 통해 as, as?, as! 모두에 대한 warning을 제공한다. 
 
@@ -945,22 +965,22 @@ class Zerg {
 ### # Swift에서의 Class - Struct의 차이
 
 - **Class**
-  - 참조 타입 (Reference Type)
-  - 객체로 사용 시 메모리 영역에 서상되며 ARC체계로 메모리 해제가 이루어진다. 
-  - 멀티스레딩, 클로저 내 참조 시 ClosureCapturing 등의 메모리 순환에 주의해야 한다.
-  - 공짜 이니셜라이저가 존재하지 않는다. 
-  - 상속, 프로토콜 채택이 가능하다. 
-  - let으로 Class 객체 생성을 했어도 객체를 접근해서 객체 내의 variable 멤버의 값을 변경시킬 수 있다.
-  - Struct에서 사용할 수 있는 mutating 키워드를 사용할 필요가 없다. 
+  - **참조 타입** (Reference Type)
+  - **객체로 사용 시 메모리 영역에 서상되며 ARC체계로 메모리 해제가 이루어진다.** 
+    - **멀티스레딩, 클로저 내 참조 시 ClosureCapturing 등의 메모리 순환에 주의**해야 한다.
+  - **공짜 이니셜라이저가 존재하지 않는다.** 
+  - **상속, 프로토콜 채택이 둘 다 가능하다.** 
+  - **let으로 Class 객체 생성을 했어도 객체를 접근해서 객체 내의 variable 멤버의 값을 변경 가능**하다.
+  - **Struct에서 멤버 값의 변화가 있을 수 있는 메서드에 사용하는 mutating 키워드를 사용할 필요가 없다.** 
 - **Struct**
-  - 값 타입 (Value Type)
-  - Struct는 대입 연산 시 값 자체가 복사되어 할당되며 원본과 공유가 불가능하다. 
-  - 불변성(Immutable) 구현에 유리
-  - 멀티스레딩에 안전하다.
-  - 공짜 이니셜라이저(자동 생성자)가 존재한다. 
-  - 상속이 불가능, 프로토콜 채택만 가능하다. 
-  - let으로 Struct 객체를 생성하면 객체 내의 멤버가 variable이어도 해당 멤버의 값을 변경시킬 수 없다. 
-  - 객체 내의 변경을 요구하는 경우 mutating 키워드를 사용해서 메서드를 정의한다. 
+  - **값 타입** (Value Type)
+  - **Struct는 대입 연산 시 값 자체가 복사되어 할당되며 원본과 공유가 불가능**하다. 
+  - **불변성(Immutable) 구현에 유리**
+  - **멀티스레딩에 안전**하다.
+  - **공짜 이니셜라이저(자동 생성자)가 존재**한다. 
+  - **상속이 불가능, 프로토콜 채택만 가능**하다. 
+  - **let으로 Struct 객체를 생성하면 객체 내의 멤버가 variable이어도 해당 멤버의 값을 변경시킬 수 없다.** 
+  - **객체 내의 멤버 변경을 요구하는 경우 mutating 키워드를 사용해서 메서드를 정의**한다. 
 
 
 
@@ -1013,12 +1033,21 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
 
 ### ## 주요 프로토콜 종류
 
-- Hashable
+- **Equatable** 
+  - **동일성 (Equality)를 비교할 수 있도록 하는 프로토콜**
+  - **Equatable을 채택한 타입은 ==, != 등의 연산을 사용가능** 하다.
+  - **Comparable, Hashable의 기반 프로토콜**이기도 하다. 
+- **Comparable**
+  - **Comparable 프로토콜은 표현하는 값이 순서를 가지고 있을 때 사용할 수 있는 프로토콜**이다.
+  - **해당 프로토콜을 채택하면 >, >=, <, <= 의 부등호 비교 연산이 가능**해진다. 
+  - **sequence, collection 등에서 정렬 등의 기능을 사용가능** 하다. 
 
-  - Hash값을 제공하는 타입 
-  - Dictionary의 KeyType은 Hashable 프로토콜을 준수하는 값만 사용 가능하다. 
-  - Set 타입은 Hashable 프토토콜을 준수한 값만 사용 가능하다. 
-  - Hashable 프토토콜을 준수하기 위해서는 ==연산자, hashValue프로퍼티를 제공해야 한다. 
+- **Hashable**
+
+  - **Hasher를 통해서 Int타입의 해쉬 값을 만들어 낼 수 있도록 만들어주는 프로토콜**
+  - **Dictionary의 KeyType은 Hashable 프로토콜을 준수하는 값만 사용 가능**하다. 
+  - **Set 타입은 Hashable 프토토콜을 준수한 값만 사용 가능**하다. 
+  - **Hashable 프토토콜을 준수하기 위해서는 ==연산자, hashValue프로퍼티를 제공해야 한다.** 
 
   ~~~ swift
   extension ToAdjustHash: Hashable {
@@ -1033,16 +1062,6 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
       }
   }
   ~~~
-
-  
-
-<br>
-
-
-
-
-
-
 
 <br><br>
 
@@ -1223,6 +1242,8 @@ print("total banana price : \(banana.price)") // 20
 
 - **iOS12 까지는 AppDelegate의 단일 keyWindow 방식**을 갖고 있었다. 
 - -> **iOS13 부터는  appDelegate에만 단일 keyWindow를 갖고 있던 방식에서 SceneDelegate가 추가되면서 SceneDelegate 각각의 keyWindow**를 갖고있게 되었다.
+
+<br><br>
 
 
 
@@ -1454,13 +1475,46 @@ object.someMethod()
   - **어떤 서브클래스에 접근해도 실제 타입에 맞는 요소를 참조하여 실행하기 때문에 다형성 구현에 용이**하다.
   - **런타임 중 작업이 있으므로 Static Dispatch에 비해 성능상으론 손해보는 단점**이 있다.
 
+<br><br>
+
+### ## Functor, Monad
+
+- **map을 적용할 수 있는 것은 Functor**이다.
+- **flatMap을 적용할 수 있는 것은 Monad**이다.
 
 
-<br>
+
+<br><br>
 
 
 
-<br>
+### ## self vs Self
+
+- **self**
+
+  - **타입 인스턴스에서 자기자신을 가리키는 프로퍼티**
+    - 해당 타입이 값타입이면 값타입처럼, 참조타입이면 클래스 인스턴스의 주소를 가지게 된다.
+
+- **Self** 
+
+  - **Self 또한 타입을 의미하지만 self와 용도의 차이**가 있다. 
+  - 1) **Protocol 내부** 
+    - **해당 프로토콜을 채택한 타입을 의미**
+  - 2) **class 내부**
+    - **해당 클래스의 타입 자체를 의미**한다. 
+
+  ~~~ swift
+  class A {
+    	// 인스턴스 타입 A 자체를 반환
+  		func someFunc() -> Self {
+  				return self
+  		}
+  }
+  ~~~
+
+  - **그 외 구조체, 열거형에서는 Self를 사용할 수 없다.**
+
+<br><br>
 
 ### # 예약어 문법
 
