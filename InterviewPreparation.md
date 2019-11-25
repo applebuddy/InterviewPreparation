@@ -409,8 +409,9 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
   
 
 - **WHERE** [조건]
-  - 특정 조건에 따라 조회할 때 사용한다. (선택)
-
+  
+- 특정 조건에 따라 조회할 때 사용한다. (선택)
+  
 - **GROUP BY**
 
   - **동일한 값을 가진 데이터를 집계해서 조회하고자 할 때 사용**하는 문장 (선택)
@@ -533,6 +534,87 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
   - 그걸 didReceiveMemoryWarning에서 처리하게 됨
 
 뷰 컨트롤의 참조가 0이 되면 deinit()을 통해 뷰컨트롤러가 가지고 있던 뷰와 관련 자원들을 해제함으로서 완련히 ViewController의 생명주기가 끝나게 됩니다...
+
+
+
+<br><br>
+
+
+
+### # iOS 주요 클래스, Main Classes 
+
+### NSObject
+
+- Objective-C 클래스 계층 구조의 Root Class
+
+~~~ swift
+class NSObject
+~~~
+
+
+
+<br><br>
+
+### # 라이브러리, Library
+
+- 프로그램이 연결할 수 있는 패키징 된 객체 파일들의 모음
+- 라이브러리 종류
+  - 정적라이브러리
+  - 공유라이브러리
+
+
+
+<br><br>
+
+
+
+### # 프레임워크, FrameWorks
+
+- 라이브러리는 실행가능한 코드일 뿐이지만 프레임쿼크는 다른 리소스의 하위 디렉토리를 포함하는 번들이다. 
+
+#### ## 코코아 터치 프레임워크 
+
+- **코코아 터치 프레임워크 (Cocoa Touch FrameWork) 는 iOS 애플리케이션 개발환경**이다.
+- **macOS 애플리케이션 제작 & 기능구현에 필요한 프레임워크를 포함하는 최상위 레벨의 프레임워크**이다. 
+- **코코아 터치는 핵심 프레임워크인 UIKit, Foundation을 포함**한다. 
+- **코코아 (Cocoa) 란 NSObject를 상속받는 모든 클래스 및 객체를 가리킬 때 사용하는 단어**이다. 
+- 코코아 (Cocoa) 란 이름의 기원
+  - **커피원산지에서 따온 Java언어에 대항해 어린아이도 할 수 있는 Java라는 의미로 코코아 Cocoa로 명명**했다. 
+
+#### ## Foundation FrameWork
+
+- **CocoaTouch FrameWork에 포함되어있는 프로그램의 중심을 담당하는 프레임워크**이다. 
+- **기본적인 원시 데이터 타입 (String, Int, Double) 등이 Foundation에 포함**되어있다. 
+- **Foundation 기본 기능 셋**
+  - Number, Data, String
+    - **원시 데이터 타입의 사용**
+  - Collection 
+    - **Array, Dictionary, Set 등의 컬렉션 타입 사용**
+  - Date, Time
+    - **날짜와 시간을 계산하거나 비교**
+  - Unit, Measurement
+    - 물리적 차원을 숫자로 표현, 관련 단위 간 변환 가능
+  - Data Formatting
+    - **숫자, 날짜, 측정값 등을 문자열로 서로 변환**하는 작업
+  - Filter, Sorting 
+    - **컬렉션의 요소를 검사, 정렬**하는 작업
+
+
+
+#### ## UIKit FrameWork
+
+- **CocoaTouch FrameWork에 포함되어있는 iOS 애플리케이션의 사용자 인터페이스를 구현하고 이베느를 관리하는 프레임워크**이다.
+
+- **UIKit 기본 기능 셋**
+
+  - **Gesture 처리, Animation, 그림그리기, 이미지/텍스트 처리 등 사용자 이벤트 처리를 위한 클래스를 제공**
+  - **애플리케이션의 화면을 구성하는 요소를 제공**
+    - **UIxxx 뷰요소들을 포함, UITableView, UICollectionView, UITextField, UILabel, UIAlertController** 등...
+
+  - ✭ **UIKit 클래스 중 UIResponder에서 파생 된 클래스나 사용자 인터페이스 관련(UI) 클래스들은 애플리케이션의 메인스레드에서만 사용해야한다.** 
+    - **User Interface와 관련 된 UI 관련 이벤트는 Main Thread에 붙어있기 때문에 메인스레드에서먄 UI를 처리해야한다.**
+
+
 
 
 
