@@ -462,16 +462,33 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
 
 # @ iOS 동향 질문
 
-- iOS13 버전의 중요 업데이트 내용
-  - 다크모드 (DarkMode) 지원
-  - 사진앱의 AI기술을 활용한 정렬기능 도입
+- **iOS13 버전의 중요 업데이트 내용**
+  - **다크모드 (DarkMode) 지원**
+  - **사진앱의 AI기술을 활용한 정렬기능 도입**
     - 사진 간 연관성 분석을 하여 사용자에게 알맞는 정렬을 보여주도록 함
     - 사진들을 분석해서 연도별, 테마별 인생에서 가장 중요한 순간들을 정리하여 분류
-  - 애플 소셜 로그인 지원
+  - **애플 소셜 로그인 지원**
     - 애플 소셜 로그인 API 공개
     - 로그인을 시도하면 별다른 입력 절차 없이 Face ID를 이용해서 로그인이 가능, 세부 개인정보 공개 설정이 가능하다.
-  - 씬델리게이트 SceneDelegate 추가 
-  - Opaque type, property Wrapper 추가
+  - **씬델리게이트 (SceneDelegate) 추가** 
+  - **Opaque type, property Wrapper 추가**
+
+<br>
+
+- **OpaqueType**
+
+  - **Swift 5.1버전으로 추가 된 Opaque Type**
+  -  **프로토콜 명을 some 뒤에 선언하여 구체적인 반환타입을 숨길 수 있도록 해준다.** 
+
+  ~~~ swift
+  // makeCollection Method는 return 타입으로 구체적 타입을 지정하지 않고 Collection 프로토콜을 준수하는 타입이라는 것만 명시해줄 수 있다. 
+  // -> OpagueType을 사용하여 구체적인 타입을 숨길 수 있다. 
+  func makeCollection() -> some Collection { 
+    	return [1, 2, 3]
+  }
+  ~~~
+
+  
 
 <br><br>
 
