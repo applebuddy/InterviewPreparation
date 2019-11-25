@@ -476,21 +476,21 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
     - 사진 간 연관성 분석을 하여 사용자에게 알맞는 정렬을 보여주도록 함
     - 사진들을 분석해서 연도별, 테마별 인생에서 가장 중요한 순간들을 정리하여 분류
   - **애플 소셜 로그인 지원**
-    - 애플 소셜 로그인 API 공개
-    - 로그인을 시도하면 별다른 입력 절차 없이 Face ID를 이용해서 로그인이 가능, 세부 개인정보 공개 설정이 가능하다.
+    - **애플 소셜 로그인 API 공개**
+    - 로그인을 시도하면 별 다른 입력 절차 없이 Face ID를 이용해서 로그인이 가능, 세부 개인정보 공개 설정이 가능하다.
   - **씬델리게이트 (SceneDelegate) 추가** 
-  - **Opaque type, property Wrapper 추가**
+  - **Opaque type (불투명 타입), property Wrapper (프로퍼티 래퍼) 추가**
 
 <br>
 
 - **OpaqueType**
 
-  - **Swift 5.1버전으로 추가 된 Opaque Type**
+  - **Swift 5.1버전으로 추가 된 Opaque Type (불투명 타입)**
   -  **프로토콜 명을 some 뒤에 선언하여 구체적인 반환타입을 숨길 수 있도록 해준다.** 
 
   ~~~ swift
   // makeCollection Method는 return 타입으로 구체적 타입을 지정하지 않고 Collection 프로토콜을 준수하는 타입이라는 것만 명시해줄 수 있다. 
-  // -> OpagueType을 사용하여 구체적인 타입을 숨길 수 있다. 
+  // -> OpaqueType을 사용하여 구체적인 타입을 숨길 수 있다. -> 말 그대로 불투명 타입
   func makeCollection() -> some Collection { 
     	return [1, 2, 3]
   }
@@ -507,27 +507,28 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
 ### # 애플리케이션 Life Cycle
 
 - **iOS Application's Life Cycle** (SceneDelegate 추가 전 기준)
-  - UIApplication 객체생성  -> @UIApplicationMain 어노테이션 식별 후 AppDelegate 싱글톤 객체 생성 -> 이후 Main Event Loop를 실행 + AppDelegate의 상황에 따른 감지 및 작업처리
-  - Not Running
-  - Foreground
-    - Inactive
-    - Active
-  - Background
-  - Suspended
+  - **UIApplication 객체생성**  -> **@UIApplicationMain 어노테이션 식별** -> **AppDelegate 싱글톤 객체 생성** -> 이후 **Main Event Loop를 실행** + **AppDelegate의 상황에 따른 감지 및 작업처리**
 
-- AppDelegate Delegate Methods
-  - application(_: didFinishLaunchingWithOptionsa:) 
-    - 앱이 처음 시작될 호출되는 델리게이트 메서드
-  - applicationDidBecomeActive(_ application: UIApplication)
-    - Foreground의 Active 상태가 될때 호출되는 델리게이트 메서드
-  - applicationWillResignActive(_ application: UIApplication) 
-    - Foreground의 Inactive상태가 될 때 호출되는 델리게이트 메서드
-  - applicationDidEnterBackground(_ application: UIApplication) 
-    - Foreground -> Background 진입 시 호출되는 델리게이트 메서드
-  - applicationWillenterForeground(_ application: UIApplication)
-    - Background -> Foreground 진입 예정 시 호출되는 델리게이트 메서드
-  - applicationWillTerminate(_ application: UIApplication)
-    - Application 종료 직전 호출되는 델리게이트 메서드
+- **Application의 상태 분류**
+  - **Not Running** : 아직 실행 안됨
+  - **Foreground** : 앱이 화면에 나타나 있는 상태
+    - Inactive : 특정한 액션이 없는 상태
+    - Active : 특정 액션이 진행 중인 상태
+  - **Background** : 앱이 백그라운드로 이동한 채 살아있는 상태
+  - **Suspended** : 앱이 백그라운드로 이동한 채 어떤 실행이 없는 상태 
+- **AppDelegate Delegate Methods**
+  - application(_: **didFinishLaunchingWithOptions**:) 
+    - **앱이 처음 시작될 때 호출**되는 델리게이트 메서드
+  - **applicationDidBecomeActive**(_ application: UIApplication)
+    - F**oreground의 Active 상태가 될때 호출**되는 델리게이트 메서드
+  - **applicationWillResignActive**(_ application: UIApplication) 
+    - **Foreground의 Inactive상태가 될 때 호출**되는 델리게이트 메서드
+  - **applicationDidEnterBackground**(_ application: UIApplication) 
+    - **Foreground -> Background 진입 시 호출**되는 델리게이트 메서드
+  - **applicationWillenterForeground**(_ application: UIApplication)
+    - **Background -> Foreground 진입 예정 시 호출**되는 델리게이트 메서드
+  - **applicationWillTerminate**(_ application: UIApplication)
+    - **Application 종료 직전 호출**되는 델리게이트 메서드
 
 
 
@@ -537,47 +538,56 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
 
 ### # 뷰 컨트롤러의 Life Cycle
 
-- ViewController의 라이프 사이클 순서 
-  - init -> loadView -> viewDidLoad -> viewWillAppear -> viewDidAppear ->viewWillDisappear -> viewDidDisappear -> viewDidUnload(Deprecated)
+- V**iewController의 라이프 사이클 순서** 
+  - **init** -> **loadView** -> **viewDidLoad** -> **viewWillAppear** -> **viewDidAppear** ->**viewWillDisappear** -> **viewDidDisappear** -> viewWillUnload/viewDidUnload(iOS6 이후 Deprecated 된 메서드)
 
 <br><br>
 
 #### 1) init() 
 
-- 스토리보드[init?(coder:)]나 nib(xib)[init(nibName:bindle:)]파일을 통해 뷰 컨트롤러를 초기화하고뷰를 만들때 사용할 정보를 뷰컨트롤러에 전달하는 단계입니다. 
+- 스토리보드[init?(coder:)]나 nib(xib)[init(nibName:bindle:)]파일을 통해 뷰 컨트롤러를 초기화하고 
+- **뷰를 만들 때 사용할 정보를 뷰컨트롤러에 전달하는 단계**입니다. 
 
 #### 2) LoadView()
 
-- **뷰를 실제로 생성 후 메모리에 로드**합니다. 만약 **스토리보드나 nib(xib)를 사용하지 않는다면 해당 메소드를 오버라이드에서 뷰를 생성, 뷰계층을 구성**해야합니다. 
+- **뷰를 실제로 생성 후 메모리에 로드하는 단계** 
+- 만약 **스토리보드나 nib(xib)를 사용하지 않는다면 해당 메소드를 오버라이드해서 사용할 뷰를 직접 생성, 뷰계층을 구성**해야합니다. 
 
 #### 3) viewDidLoad()
 
-- loadView()로 뷰가 메모리에 로드된 직후에 해당 메소드를 호출합니다. 이때 뷰 or 뷰컨트롤러에 대한 추가적인 설정을 합니다. 
+- **loadView()로 뷰가 메모리에 로드된 직후에 해당 메소드를 실행**합니다. 
+- 보통 이때 뷰 or 뷰컨트롤러에 대한 추가적인 초기화 설정을 합니다. 
 
 #### 4) viewWillAppear(_:)
 
-- view가 view계층에 추가되기 직전, 뷰 애니메이션이 설정되기 전에 호출된다. 뷰가 화면에 나타나기 전에 해당 viewWillAppear를 오버라이드해서 필요한 작업을 수행할 수 있다. viewWillAppear를 오버라이드 하기 전에는 반드시 부모클래스의 viewWillAppear를 호출하도록 정의해야 한다. 
+- **view가 view계층에 추가되기 직전(실제 뷰가 보여지기 직전), 뷰 애니메이션이 설정되기 전에 실행**된다. 
+- 뷰가 화면에 나타나기 전에 해당 viewWillAppear를 오버라이드해서 필요한 작업을 수행할 수 있다. viewWillAppear를 오버라이드 하기 전에는 반드시 부모클래스의 viewWillAppear를 호출하도록 정의해야 한다. 
   - ☆ 만약 어떤 뷰컨트롤러가 다른 뷰컨트롤러를 popover 방식으로 띄운 후, 해당 뷰컨트롤러가 사라질때는 예외적으로 popover를 실행한 뷰 컨트롤러의 viewDidAppear가 실행되지 않는다. 
 
 #### 5) viewDidAppear(_:)
 
-- view가 view계층에 추가된 직후에 실행됩니다. 해당 메서드를 오버라이드 해서 나타나는 뷰에 대한 추가적인 설정을 할 수 있는데 이때 반드시 부모 클래스의 viewDidAppear를 호출하도록 정의해야 합니다. 
+- **view가 view계층에 추가된 직후에 실행**됩니다. 
+- 해당 메서드를 오버라이드 해서 나타나는 뷰에 대한 추가적인 설정을 할 수 있는데 이때 반드시 부모 클래스의 viewDidAppear를 호출하도록 정의해야 합니다. 
 
 #### 6) viewWillDisappear(_:)
 
-- view가 view계층에서 제거되기 직전에 viewWillDisappear(_:)가 호출됩니다. view가 view계층에서 제거되기 직전 최초 반응가(first responder)상태를 내려놓거나, 뷰의 설정 등의 작업이 가능합니다. viewWillDisappear를 오버라이드할때는 반드시 부모 클래스의 viewWillDisappear를 호출해야 합니다. 
+- **view가 view계층에서 제거되기 직전에 viewWillDisappear(_:)가 호출**됩니다. 
+- view가 view계층에서 제거되기 직전 최초 반응가(first responder)상태를 내려놓거나, 뷰의 설정 등의 작업이 가능합니다. viewWillDisappear를 오버라이드할때는 반드시 부모 클래스의 viewWillDisappear를 호출해야 합니다. 
 
 #### 7) viewDidDisappear(_:) 
 
-- view가 view계층에서 제거된 이후에 호출됩니다. viewDidAppear(_:)에서 뷰가 제거된 후의 작업을 할 수 있으며 이때 부모클래스의 viewDidDisapear를 호출해야 합니다. 
+- **view가 view계층에서 제거된 이후에 호출**됩니다. 
+- viewDidAppear(_:)에서 뷰가 제거된 후의 작업을 할 수 있으며 이때 부모클래스의 viewDidDisapear를 호출해야 합니다. 
 
 #### - didReceiveMemoryWarning()
 
-- 앱 실행 간 시스템 메모리가 부족한 상황이 되면, 시스템은 뷰컨트롤에 메모리가 모자라다는 메세지를 보내며 didReceiveMemoryWarning()메서드를 호출합니다. 
-- iOS6 이전 메모리 부족에 따라 시스템이 임의적으로 뷰를 헤제하던 것에서 iOS6 이후에는 시스템이 직접 관여하지 않게 되므로서 임의 해제에 사용하던 viewWillUnload / viewDidUnload는 deprecated되었습니다.
-  - 그걸 didReceiveMemoryWarning에서 처리하게 됨
+- **앱 실행 간 시스템 메모리가 부족한 상황이 되면, 시스템은 뷰컨트롤러에 메모리가 모자라다는 메세지를 보내며 didReceiveMemoryWarning()메서드를 호출**합니다. 
+- **iOS6 이전에는 메모리 부족에 따라 시스템이 임의적으로 뷰를 해제 -> iOS6 이후에는 시스템이 직접 관여하지 않게 되므로서 임의 해제에 사용하던 viewWillUnload / viewDidUnload는 deprecated**되었습니다.
+  - 해당 문제의 처리를 **didReceiveMemoryWarning에서 설정**하게 되었음.
 
-뷰 컨트롤의 참조가 0이 되면 deinit()을 통해 뷰컨트롤러가 가지고 있던 뷰와 관련 자원들을 해제함으로서 완련히 ViewController의 생명주기가 끝나게 됩니다...
+#### **8) ViewController의 해제**
+
+- **뷰 컨트롤러의 참조가 0이 되면 deinit()을 통해 뷰컨트롤러가 가지고 있던 뷰와 관련 자원들을 해제**함으로서 **완전히 ViewController의 생명주기가 종료**하게 됩니다.
 
 
 
@@ -589,7 +599,7 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
 
 ### NSObject
 
-- Objective-C 클래스 계층 구조의 Root Class
+- **Objective-C 클래스 계층 구조의 Root Class**
 
 ~~~ swift
 class NSObject
@@ -601,10 +611,10 @@ class NSObject
 
 ### # 라이브러리, Library
 
-- 프로그램이 연결할 수 있는 패키징 된 객체 파일들의 모음
-- 라이브러리 종류
-  - 정적라이브러리
-  - 공유라이브러리
+- **프로그램이 연결할 수 있는 패키징 된 객체 파일들의 모음**
+- **라이브러리 종류**
+  - **정적라이브러리**
+  - **공유라이브러리**
 
 
 
@@ -612,32 +622,32 @@ class NSObject
 
 
 
-### # 프레임워크, FrameWorks
+### # 프레임워크, Frameworks
 
-- 라이브러리는 실행가능한 코드일 뿐이지만 프레임쿼크는 다른 리소스의 하위 디렉토리를 포함하는 번들이다. 
+- 라이브러리는 **실행가능한 코드**일 뿐이지만 **+ 프레임쿼크는 다른 리소스의 하위 디렉토리를 포함하는 번들**이다. 
 
 #### ## 코코아 터치 프레임워크 
 
 - **코코아 터치 프레임워크 (Cocoa Touch FrameWork) 는 iOS 애플리케이션 개발환경**이다.
-- **macOS 애플리케이션 제작 & 기능구현에 필요한 프레임워크를 포함하는 최상위 레벨의 프레임워크**이다. 
+- **macOS 애플리케이션 제작 & 기능구현에 필요한 프레임워크를 포함하는 최상위 계층의 프레임워크**이다. 
 - **코코아 터치는 핵심 프레임워크인 UIKit, Foundation을 포함**한다. 
 - **코코아 (Cocoa) 란 NSObject를 상속받는 모든 클래스 및 객체를 가리킬 때 사용하는 단어**이다. 
 - 코코아 (Cocoa) 란 이름의 기원
   - **커피원산지에서 따온 Java언어에 대항해 어린아이도 할 수 있는 Java라는 의미로 코코아 Cocoa로 명명**했다. 
 
-#### ## Foundation FrameWork
+#### ## Foundation Framework
 
 - **CocoaTouch FrameWork에 포함되어있는 프로그램의 중심을 담당하는 프레임워크**이다. 
 - **기본적인 원시 데이터 타입 (String, Int, Double) 등이 Foundation에 포함**되어있다. 
 - **Foundation 기본 기능 셋**
   - Number, Data, String
-    - **원시 데이터 타입의 사용**
+    - **원시 데이터 타입의 제공**
   - Collection 
-    - **Array, Dictionary, Set 등의 컬렉션 타입 사용**
+    - **Array, Dictionary, Set 등의 컬렉션 타입 제공**
   - Date, Time
     - **날짜와 시간을 계산하거나 비교**
   - Unit, Measurement
-    - 물리적 차원을 숫자로 표현, 관련 단위 간 변환 가능
+    - **물리적 차원을 숫자로 표현, 단위의 변환**
   - Data Formatting
     - **숫자, 날짜, 측정값 등을 문자열로 서로 변환**하는 작업
   - Filter, Sorting 
@@ -645,17 +655,16 @@ class NSObject
 
 
 
-#### ## UIKit FrameWork
+#### ## UIKit Framework
 
-- **CocoaTouch FrameWork에 포함되어있는 iOS 애플리케이션의 사용자 인터페이스를 구현하고 이베느를 관리하는 프레임워크**이다.
-
+- **CocoaTouch FrameWork에 포함되어있는 UIKit Framework**
+- **iOS 애플리케이션의 사용자 인터페이스를 구현하고 이벤트를 관리하는 프레임워크**이다.
 - **UIKit 기본 기능 셋**
-
-  - **Gesture 처리, Animation, 그림그리기, 이미지/텍스트 처리 등 사용자 이벤트 처리를 위한 클래스를 제공**
+- **Gesture 처리, Animation, 그림그리기, 이미지/텍스트 처리 등 사용자 이벤트 처리를 위한 클래스를 제공**
   - **애플리케이션의 화면을 구성하는 요소를 제공**
     - **UIxxx 뷰요소들을 포함, UITableView, UICollectionView, UITextField, UILabel, UIAlertController** 등...
-
-  - ✭ **UIKit 클래스 중 UIResponder에서 파생 된 클래스나 사용자 인터페이스 관련(UI) 클래스들은 애플리케이션의 메인스레드에서만 사용해야한다.** 
+  
+- ✭ **UIKit 클래스 중 UIResponder에서 파생 된 클래스나 사용자 인터페이스 관련(UI) 클래스들은 애플리케이션의 메인스레드에서만 사용해야한다.** 
     - **User Interface와 관련 된 UI 관련 이벤트는 Main Thread에 붙어있기 때문에 메인스레드에서먄 UI를 처리해야한다.**
 
 <br><br>
@@ -708,8 +717,8 @@ var numb: Int = 0 // 저장 프로퍼티
 
 ### ## 계산 프로퍼티 
 
-- **읽기, 쓰기에 따른 값을 그때그때 계산한 값을 내놓는 프로퍼티**
-- **get or get+set 으로 구성**된다.
+- **읽기, 쓰기에 따라 그때그때 계산한 값을 내놓는 프로퍼티**
+- **get || get+set 으로 구성**된다.
   - **get 만 구현할 경우 return ~~~ 으로만 표현**해도 된다. 
 
 ~~~ swift
@@ -737,8 +746,8 @@ class Point {
 
 ### ## 프로퍼티 감시자 
 
-- **값이 변화했을때 변화전 or 변화후의 값을 처리할 수 있는 프로퍼티**
-- **didSet(값 변동 시 이전 값(oldValue)을 통해 처리) or willSet(값 변동 시 변동된 값(newValue)을 통해 처리)을 사용**한다. 
+- **값이 변화했을때 변화 전(didSet) or 변화 후(willSet)의 값을 처리할 수 있는 프로퍼티**
+- **didSet(값 변동 시 이전 값(oldValue)을 통해 처리) || willSet(값 변동 시 변동된 값(newValue)을 통해 처리)을 사용**한다. 
 - **계산 프로퍼티 기능과 함께 사용할 수 없다.** 
 
 ~~~ swift
@@ -761,7 +770,7 @@ private var isAPIDataRequested: Bool = false {
 
 ### ## Lazy 프로퍼티
 
-- **Lazy 변수는** 초기화 후 **실제 사용되었을때 부터 연산**이 된다. 
+- **Lazy 변수는** 초기화 후 **실제 사용되었을때 부터 실제 연산**이 된다. 
 - **Struct, Class에서만 Lazy 사용이 가능**하다. 
 - **Lazy 변수는 var와 사용가능하며 lazy let은 사용 불가능**하다. 
   - **실제 사용 이후에 연산이 되지만 이전에 이미 초기화를 한 뒤 접근하는 것이기 때문에 lazy var 의 형식으로 사용**한다. 
@@ -773,7 +782,7 @@ class Person {
   	// 클로저 내에서 self.를 참조하여 순환참조가 발생할 여지가 있으므로 [weak self] 키워드를 지정한다. 
   	lazy var greeting: () -> String = { [weak self] in 
     		return "Hello my name is \((self?.name)!)"                                  
-    }
+    }()
 }
 
 var me = Person(name: "applebuddy")
@@ -793,8 +802,8 @@ print(me.greeting()) // Hello my name is Mingoony
 
 ### # ARC 란 무엇인가요?
 
-- ARC는 Automactic Reference Counting의 약어이다.
-- ARC는 컴파일 시점에 동작하며 코드를 빌드(컴파일) 할 때 객체의 RC(Reference Count)를 추척하여 0이 되는 시점에는 자동으로 release 코드를 넣어 해제해주는 방식을 말한다. 
+- ARC는 **Automatic Reference Counting의 약어**이다.
+- **ARC는 컴파일 시점에 동작**하며 **코드를 빌드(컴파일) 할 때 각 객체의 RC(Reference Count)를 추척하여 0이 되는 시점**에 자동으로 release 코드를 넣어 **해제해주는 방식**을 말한다. 
 
 <br><br>
 
@@ -804,9 +813,9 @@ print(me.greeting()) // Hello my name is Mingoony
 
 ### # 옵셔널이란 무엇인가요?
 
-- 강타입 언어인 Swift는 타입 안정성을 중요시한다. 그런 Swift언어에서 값이 없을 수(nil) 있음을 표현하는 것이 옵셔널이다. 
-- 옵셔널은 모나드의 일종이다. 
-- 옵셔널 변수는 끝에 ''?'' 키워드가 붙으며 이는 강제언래핑(!) or 옵셔널바인딩을 통해 옵셔널을 실제 있는 값으로 래핑하여 사용할 수 있다. 
+- **강타입 언어인 Swift는 타입 안정성을 중요시**한다. 그런 **Swift언어에서 값이 없을 수(nil) 있음을 표현하는 것이 옵셔널**이다. 
+- **옵셔널은 모나드의 일종**이다. 
+- 옵**셔널 변수는 끝에 ''?'' 키워드가 붙으며 이는 강제언래핑(!) or 옵셔널바인딩을 통해 옵셔널을 실제 있는 값으로 래핑**하여 **사용할 수 있다.** 
 
 <br><br>
 
@@ -814,15 +823,19 @@ print(me.greeting()) // Hello my name is Mingoony
 
 ### # map, flatMap, compactMap의 차이점
 
-- Map 
+- **Map** 
   - **Sequence 요소들을 지정한 작업으로 Mapping** 시킨다. -> 결과에 Optional 중첩이 생길 수 있다.  
-- FlatMap
-  - **filter { $0 != nil } + 시퀀스들을 합쳐서 반환**한다.
+  - map은 functor라고 한다. 
+- **FlatMap**
+  - **Mapping + filter { $0 != nil } + 시퀀스들을 합쳐서 반환**한다.
   - map + flatten의 속성이 더해진 함수
+  - **2차원배열을 1차원배열 로 flatten하게 만들어 사용하고자 할때 사용**할 수 있다.
   - Non-nil 상태(Optional값이 아닌) 결과들을 갖는 배열을 리턴한다. 
-- CompactMap 
-  - **fillter { $0 != nil } + mapping 후 결과를 반환**한다.
-  - 1차원 배열 시퀀스에 대한 반환 결과는 FlatMap과 CompactMap이 동일하다. 
+  - flatMap은 모나드라고 한다.
+- **CompactMap** 
+  - **Mapping + fillter { $0 != nil } 후 결과를 반환**한다. (swift 4.1에서 추가)
+  - **1차원 배열 시퀀스에 대한 반환 결과는 FlatMap과 CompactMap이 동일**하다. 
+    - 1차원 배열에서 nil을 필터링하며 Mapping하고자 한다면 compactMap을 쓰면 된다. 
 
 
 
