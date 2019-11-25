@@ -684,6 +684,36 @@ private var isAPIDataRequested: Bool = false {
 }
 ~~~
 
+<br>
+
+### ## Lazy 프로퍼티
+
+- **Lazy 변수는** 초기화 후 **실제 사용되었을때 부터 연산**이 된다. 
+- **Struct, Class에서만 Lazy 사용이 가능**하다. 
+- **Lazy 변수는 var와 사용가능하며 lazy let은 사용 불가능**하다. 
+  - **실제 사용 이후에 연산이 되지만 이전에 이미 초기화를 한 뒤 접근하는 것이기 때문에 lazy var 의 형식으로 사용**한다. 
+- **Lazy 변수를 실제 처음 사용할 때 연산할 값을 넣어주기 위해 초기화 시 Closure ' {...}() ' 를 넣어준다.**
+
+~~~ swift
+class Person {
+  	var name: String
+  	// 클로저 내에서 self.를 참조하여 순환참조가 발생할 여지가 있으므로 [weak self] 키워드를 지정한다. 
+  	lazy var greeting: () -> String = { [weak self] in 
+    		return "Hello my name is \((self?.name)!)"                                  
+    }
+}
+
+var me = Person(name: "applebuddy")
+print(me.greeting()) // Hello my name is applebuddy
+me.name = "Mingoony"
+print(me.greeting()) // Hello my name is Mingoony
+~~~
+
+<br>
+
+- **당장 사용할 가능성이 적은 컨텐츠를 메모리로 쌓아두면 쓸데없이 메모리만 차지하고, 애플리케이션 실행 시 부하**가 올 수도 있다. 
+  - **바로 사용하지 않을 수 있는 비교적 메모리 소요가 큰 멤버에 대해 lazy 키워드를 추가하여 메모리 효용성을 높힐 수 있다.** 
+
 
 
 <br><br>
@@ -704,8 +734,6 @@ private var isAPIDataRequested: Bool = false {
 - 강타입 언어인 Swift는 타입 안정성을 중요시한다. 그런 Swift언어에서 값이 없을 수(nil) 있음을 표현하는 것이 옵셔널이다. 
 - 옵셔널은 모나드의 일종이다. 
 - 옵셔널 변수는 끝에 ''?'' 키워드가 붙으며 이는 강제언래핑(!) or 옵셔널바인딩을 통해 옵셔널을 실제 있는 값으로 래핑하여 사용할 수 있다. 
-
-
 
 <br><br>
 
