@@ -853,7 +853,7 @@ print(me.greeting()) // Hello my name is Mingoony
     - **Model과는 절대 소통하지 못한다.** 
     - **Controller와는 블라인드 상태로 소통**해야한다. 
       - View는 Controller가 어떤목적의 Controller인지 알 수 없다.
-    - **Controllers에 제공되는 브라인드 소통 방법**
+    - **Controllers에 제공되는 블라인드 소통 방법**
       - **타겟 메서드** : **Controller에서** **@IBOutlet(아울렛), @IBAction(타겟메서드)등의 형태로 사용가능**하다.
       - **델리게이트** : **Controller에서** **View요소의 delegate, dataSource 등을 self로 할당하여 사용가능**하다. 
         - **View의 delegate변수에 weak 지정을 해주어 Controller self 참조의 의한 순환참조를 방지**할 수 있다. 
@@ -870,18 +870,18 @@ print(me.greeting()) // Hello my name is Mingoony
     - **iOS에서 ViewController의 비중이 크고** 상대적으로 **ViewController만 유독 거대해질 가능성**이 있다.
   - **Testability**
     - 앞서 말했던 **Massive ViewController의 성질로 인해 Test하는데 있어 불편함**이 생길 수 있다. 
-    - 상대적으로 비대해지는 ViewController에 대한 유지보수의 문제점
+    - 상대적으로 **비대해지는 ViewController에 대한 유지보수의 문제점**
 
 <br><br>
 
 ### # 순환참조란 무엇인가요?
 
-- 데드락(DeadLock), 교착상태, 병목현상이라고도 한다. 
-- 힙에 참조된 객체가 서로가 헤제되기를 무한정으로 기다리며 병목현상이 일어나는 것을 말함
+- **데드락(DeadLock), 교착상태, 병목현상**이라고도 한다. 
+- **힙에 참조된 객체가 서로가 헤제되기를 무한정으로 기다리며 병목현상이 일어나는 것**을 말함
 
 #### - Closure Capturing
 
-- iOS개발 간 마주할 수 있는 대표적인 예시로는 Closure Capturing이 있음.
+- **iOS개발 간 마주할 수 있는 대표적인 교착상태 예시**로는 **Closure Capturing**이 있음.
 
 ~~~ swift 
 class Zerg {
@@ -901,9 +901,9 @@ class Zerg {
 
 #### 객체 간 순환참조를 발견하는 방법과 해결방법
 
-- Instrument의 Leak 도구를 이용해서 체크
-- deinit을 활용하여 로깅코드를 통해 체크한다. 
-- Xcode Memory Graph를 이용해서 Live Object를 확인, Leaking Object 확인
+- **Instrument의 Leak 도구를 이용**해서 체크
+- **deinit 내 로깅코드를 통해 체크**한다. 
+- **Xcode Memory Graph를 이용해서 Live Object, Leaking Object 확인**
 
 
 
@@ -923,36 +923,37 @@ class Zerg {
 
   - Ex) **A라는 메서드에 a라는 레퍼런스 객체를 생성 (1 + 1 == 2) -> A 메서드 내에서 사용하고 A메서드가 종료하더라도 (2 - 1 == 1) RC는 0이 되지 않아 이후 다른 곳에서도 nil로 해제되지않고 해당 객체의 사용이 가능**해진다. 
 
-    - 다만 Closure 내에서 strong self 멤버를 사용 시, Closure Capturing 등의 문제 상황이 발생할 수 있어 주의가 필요하다. 
+    - 다만 **Closure 내에서 strong self 멤버를 사용 시, Closure Capturing 등의 문제 상황이 발생할 수 있어 주의가 필요**하다. 
 
-  - strong 객체 A 사용 예시 ▼
+  - **strong 객체 A 사용 예시 ▼**
 
     ~~~ swift
     
     class A: CustomStringConvertible {
       var description: String {
-        return "Class A"
+       	 return "Class A"
       }
     }
     
     func someMethod() {
       let a = A() // a Reference Count 0+1 == 1
       DispatchQueue.main.async {
-        print(a) // a Reference Count 1+1 == 2
+       	 print(a) // a Reference Count 1+1 == 2
       }
     } // a Reference Count 2-1 == 1
     ~~~
 
 - **weak** 
   
-  - **객체가 할당 될 때 RC를 증가시키지 않는다. 또한 weak 키워드는 Optional에만 적용이 된다. ARC에 의해 AC가 0이 되면 해당 메모리는 해제되고 nil**이 된다. 
+  - **객체가 할당 될 때 RC를 증가시키지 않는다. 또한 weak 키워드는 Optional에만 적용이 된다. ARC에 의해 RC가 0이 되면 해당 메모리는 해제되고 nil**이 된다. 
   - **클로저 내 상호참조로 인한 Closure Capturing을 해결할 수 있는 방법 중 하나**이다. 
-- **비교적 Life Cycle이 짧은 경우에 사용**한다. 
+  - **비교적 Life Cycle이 짧은 경우에 사용**한다. 
   
 - **Unowned**
   
   - **객체가 할당 될 때 RC를 증가시키지 않는다.** 그러나 **weak 멤버와 달리 Non-Optional로 선언**되어야 하며, **ARC에 의해 메모리 해제가 된 후에도 해당 메모리의 값을 있는것으로 인지**하며 이 **해당 멤버가 nil인데 접근할 경우 앱 크래시가 발생**할 수 있다. 
-  - **해당 객체의 Life Cycle이 명확하다고 개발자에 의해 판단이 서는 경우**, **weak 대신 사용하여 옵셔널 바인딩 등의 과정을 거치지 않고 보다 간결한 코딩이 가능**해진다. 
+  - **해당 객체의 Life Cycle이 명확하다고 개발자에 의해 판단이 서는 경우 사용하는게 좋다.**
+  - **Non-Optional로 선언되므로 옵셔널 바인딩 등의 과정을 거치지 않고 weak 키워드 멤버보다 간결한 코딩이 가능**해진다. 
 
 
 
@@ -966,7 +967,7 @@ class Zerg {
 
 ### # IBOutlet의 weak 사용 여부 문제
 
-- **iOS6 버전 까지**는 **앱 실행 간 메모리 부족문제가 발생할때 시스템이 임의로 viewWillUnload, viewDidUnload 함수를 사용하여 뷰를 해제**했으나 이때 **@IBOutlet 멤버 등의 경우 weak 설정이 되지 않으면 시스템이 뷰를 해제했으나 사용하지 않는 뷰가 ARC에 의해 해제되지않고 남아있게 되는 문제**가 있을 수 있었다.
+- **iOS6 버전 까지**는 **앱 실행 간 메모리 부족문제가 발생할때 시스템이 임의로 viewWillUnload, viewDidUnload 함수를 사용하여 뷰를 해제**했는데 이때 **@IBOutlet 멤버 등의 경우 weak 설정이 되지 않으면 시스템이 뷰를 해제, 사용하지 않는 뷰 요소가 ARC에 의해 해제되지않고 남아있게 되는 문제**가 있을 수 있었다.
 - **iOS6 이후**부터는 **시스템이 뷰의 해제에 임의로 관여하지 않고 대신 개발자가 didReceiveMemoryWarning()에서 메모리 부족 상황의 작업을 처리할 수 있게 됨**으로서 **@IBOutlet의 별도 weak 설정이 필요없게 되었다.** 
 - 그렇게 시스템이 메모리 부족 상황에 대한 임의적 뷰 메모리 해제에 관여하지 않게 됨으로서 뷰 해제에 시스템이 사용하던 viewWilllUnload / viewDidUnload는 필요없게 되었다. (deprecated)
 
@@ -974,7 +975,7 @@ class Zerg {
 
 ### # Escaping Closure의 개념 
 
-- **메서드로 부터 전달받은 closure를 메서드의 LifeCycle내에서 끝내지 않고 closure 내부의 결과를 외부에 전달하고자 할 때 사용**할 수 있다.
+- **메서드로 부터 실행된 closure를 메서드의 LifeCycle내에서 끝내지 않고 closure 내부의 결과를 외부에 전달하고자 할 때 사용**할 수 있다.
   - **콜백함수 같은 효과**를 볼 수 있음
 - 해당 **메서드의 호출이 끝난 이후에도 closure는 메모리 어딘가에 저장되어 있어야하는데 이때 상황에 따라 weak 멤버등의 사용이 필요할 수 있음을 고려**해야한다. 
 - **@escaping이 명시되어있지 않은 경우 일반적으로 non-escaping closure**이며, **non-escaping closure는 메서드 실행의 종료 이전에 closure의 사용이 모두 완료됨을 보장한다.**
@@ -982,16 +983,51 @@ class Zerg {
 
 <br><br>
 
+
+
+### # 1급 객체, 성립 조건
+
+- **swift의 함수(Closure)는 1급객체**이다.
+- **1급 객체의 성립조건**
+  - 변수나 데이터에 할당 될 수 있어야 한다. 
+  - 객체의 인자로 넘길 수 있어야 한다. 
+  - 객체의 리턴값으로 리턴 될 수 있어야 한다. 
+
+
+
+<br>
+
+
+
+### # 제네릭 (Generics)
+
+- **제네릭은 Swift에서 가장 강력한 기능 중 하나로 Swift 표준 라이브러리 대부분이 제네릭코드로 만들어졌다.**
+
+  - **그 예로 Array, Dictionary 등의 타입은 제네릭 타입**이다. 
+
+- **제네릭의 장점**
+
+  - **제네릭을 사용하면 코드를 유연하게 작성**할 수 있고, **재사용 가능한 함수와 타입이 어떤 타입과 작업할 지에 대한 요구사항을 정의**할 수 있다.
+  - **타입만 다르고 코드의 내용이 대부분 일치할때 제네릭 사용을 통해 코드의 재사용성**을 높힐 수 있다.
+  - **제네릭 타입을 준수하지 않는 경우 컴파일타임에 에러를 체크 가능**하다.
+
+  - **컴파일러가 타입캐스팅을 해주므로 개발자가 편**리하다. 
+    - ex) **'Array<Int>()'** 등의 **선언을 하면 알아서 Int형의 배열로 컴파일러가 타입캐스팅** 해준다.
+
+  - **추상적인 방법으로 코드를 작성**할 수 있다. 
+
+<br>
+
 ### # as, as?, as! 의 차이
 
-- as
+- **as**
   - **컴파일러가 타입의 성공을 보장하는 타입캐스팅 방법**
   - **컴파일 타임에 캐스팅 가능/불가능 여부를 확인 가능**하다.
-- as? 
+- **as?** 
   - **타입 변환에 실패할 경우 nil을 리턴**한다. 
   - 컴파일 타임에 캐스팅 가능/불가능 여부를 확인 불가(Xcode IDE에선 가능)
 
-- as!
+- **as!**
   - **타입 변환에 실패할 경우 앱 크래시가 발생**한다. 
   - 컴파일 타임에 캐스팅 가능/불가능 여부를 확인 불가(Xcode IDE에선 가능)
 - ☆ Xcode 등의 일부 IDE에서는 정적 코드검사를 통해 as, as?, as! 모두에 대한 warning을 제공한다. 
@@ -1004,7 +1040,7 @@ class Zerg {
 
 - **Class**
   - **참조 타입** (Reference Type)
-  - **객체로 사용 시 메모리 영역에 서상되며 ARC체계로 메모리 해제가 이루어진다.** 
+  - **객체로 사용 시 메모리 영역에 저상되며 ARC 체계로 메모리 해제가 이루어진다.** 
     - **멀티스레딩, 클로저 내 참조 시 ClosureCapturing 등의 메모리 순환에 주의**해야 한다.
   - **공짜 이니셜라이저가 존재하지 않는다.** 
   - **상속, 프로토콜 채택이 둘 다 가능하다.** 
@@ -1026,7 +1062,7 @@ class Zerg {
 
 ### # 익스텐션 Extension
 
-- **인스텐션은 iOS에서 매우 강력한 도구**이다.
+- **익스텐션 (Extension) 은 iOS에서 매우 강력한 도구**이다.
 - **extension은 저장공간이 있는 변수는 아니다.** 
 - **extension은 간편하여 쉽게 사용**될 수 있다.
   - 그러나 **extension사용 시 불필요한 기능인지 고려할 필요**가 있다.
@@ -1051,7 +1087,7 @@ extension UIView {
   - **별도의 세부 구현이 없는 메서드, 프로퍼티로 구성하고 있는 하나의 일급 타입**
   - **실제 구현이 아닌 순수한 선언형태**를 갖고 있다. 
   - **class만 취급하는 프로토콜의 경우 : class로 class에서만 사용하도록 지정할 수 있다.** 
-- Swift 내 문자열, 배열 등 많은 것들이 프로토콜을 사용하고 있으며, 이들의 기초가 되고 있다.
+- **Swift 내 문자열, 배열 등 많은 것들이 프로토콜을 사용**하고 있으며, **이들의 기초**가 되고 있다.
 - 다중상속을 지원하지 않는 Swift에서 **다중상속과 같은 효과, Controller-View 간 Delegation 블라인드 소통 기능** 등 다양한 곳에 사용할 수 있다. 
 
 ~~~ swift
@@ -1082,7 +1118,7 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
 
 - **Hashable**
 
-  - **Hasher를 통해서 Int타입의 해쉬 값을 만들어 낼 수 있도록 만들어주는 프로토콜**
+  - Hasher를 통해서 **Int타입의 해쉬 값을 만들어 낼 수 있도록 만들어주는 프로토콜**
   - **Dictionary의 KeyType은 Hashable 프로토콜을 준수하는 값만 사용 가능**하다. 
   - **Set 타입은 Hashable 프토토콜을 준수한 값만 사용 가능**하다. 
   - **Hashable 프토토콜을 준수하기 위해서는 ==연산자, hashValue프로퍼티를 제공해야 한다.** 
@@ -1105,10 +1141,9 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
 
 ### # 열거형 Enum
 
-- Class, Struct와 더불어 **Swift 데이터 구조의 일종인 Enum**
+- Class, Struct와 더불어 **Swift 데이터 구조 중 하나인 Enum**
 - Struct와 동일한 **값 타입의 데이터 타입**
-- 메서드, 변수 등을 가질 수 있지만 연동자료 따로 갖고 있지는 않다.
-  - enum 내 연동자료들을 제외하고는 저장공간을 갖고 있지 않다.
+- **메서드, 변수 등을 가질 수 있지만 enum 내 연동자료들을 제외하고는 별도의 저장공간을 갖고 있지 않다.**
   - **case let 을 통해 enum case에 따른 연동자료를 얻도록 할 수 있다.** 
 - **Swift의 enum은 다른 언어에 비해 매우 강력**하다. 
   - **enum 각각의 case들이 연동된 데이터 값을 가질 수 있기 때문**이다. 
@@ -1150,18 +1185,20 @@ print("total banana price : \(banana.price)") // 20
 
 ### # Frame - Bounds의 차이
 
-- Frame
-  - SuperView(상위뷰) 좌표 시스템 내에서의 View 위치(origin)와 크기(size)
-- Bounds
-  - view 자기자신을 기준으로 한 좌표시스템에서의 위치(origin)와 크기(size)
+- **Frame**
+  - **SuperView(상위뷰) 좌표 시스템 내에서의 View 위치(origin)와 크기(size) 를 지정할 수 있다.**
+  - **부모뷰의 기준에서 서브뷰의 위치와 크키를 지정**
+- **Bounds**
+  - **view 자기자신을 기준으로 한 좌표시스템에서의 위치(origin)와 크기(size)**
     - 기본적인 default origin은 x:0, y:0을 가리킨다. 
-  - 부모 뷰의 위치관계와는 아무런 관계가 없다. 
-  - bounds 값이 변경되면 해당 뷰의 서브뷰들의 드로잉 위치가 변경됨을 의미한다. 
-  - bounds값이 변경될 때 subView의 위치가 바뀌는 것은 subView의 frame값이 변경된 것이 아니다. 
-    - bounds값이 바뀌면서 해당 뷰의 좌표축이 변경되었기 때문에 그에따라 서브뷰의 드로잉 위치가 변경되는 것일 뿐이다. 
-  - Bounds 실 사용 예시
-    - UIScrollView/UITableView 등을 스크롤 할때 scrollView.bounds가 변경됨으로서 subView들의 위치가 달라지는 것인 bounds 특징의 예이다. 
-    - 이때도 subView들의 frame은 변동되지 않는다. 
+  - **부모 뷰의 위치관계와는 아무런 관계가 없다.** 
+  - **특정 뷰의 bounds 값이 변경되면 해당 뷰의 서브뷰들의 드로잉 위치가 bound 값에 따라 변경 됨을 의미**한다. 
+  - **bounds값이 변경될 때 subView의 위치가 바뀌는 것은 subView의 frame값이 변경된 것이 아니다.** 
+    - **bounds값이 바뀌면서 해당 뷰의 좌표축이 변경되었기 때문**에 그에따라 **서브뷰의 드로잉 위치가 변경되는 것일 뿐이다.** 
+  - **Bounds 실 사용 예시**
+    - **UIScrollView/UITableView 등을 스크롤 할때 scrollView.bounds가 변경됨으로서 subView들의 위치가 달라지는 것인 bounds 특징의 예**이다. 
+    - 이때도 **subView들의 frame은 변동되지 않는다.** 
+      - **UIScrollView/UITableView 등의 bounds 값이 변경된 것**이다.
 
 
 
@@ -1169,9 +1206,9 @@ print("total banana price : \(banana.price)") // 20
 
 ### # UIViewController 프로퍼티인 TopLayoutGuide, BottomLayoutGuide가 iOS11에서 deprecated된 이유와 대체수단
 
-- 아이폰X가 생기면서 안전영역에 대한 **SafeAreaLayoutGuide**가 생겼기 때문이다.
+- 아이폰X가 생기면서 **iOS11 이후 안전영역에 대한 SafeAreaLayoutGuide가 생겼기 때문**이다.
   - **SafeAreaLayoutGuide**는 기존 Top, Bottom LayoutGuide와 **다르게 안전한 컨텐츠 영역의 개념**으로 등장했다.
-- 기존 TopLayoutGuide, BottomLayoutGuide는 두개의 사각 영역으로 되어있는 GuideArea였던 반면, SafeAreaLayoutGuide는 좌/우/위/아래의 하나의 사각 영역으로 되어 있다. 
+- 기존 **TopLayoutGuide, BottomLayoutGuide는 두개의 사각 영역으로 되어있는 GuideArea였던 반면, SafeAreaLayoutGuide는 좌/우/위/아래의 하나의 사각 영역**으로 되어 있다. 
 
 
 
@@ -1181,10 +1218,10 @@ print("total banana price : \(banana.price)") // 20
 
 ### # Timer 
 
-- 일정 주기마다 특정한 작업을 처리하기 위해 사용할 수 있음
-- scheduledTimer(withTimeInterval:, repeats:) { timer in ... } 
-  - 일정 주기별로 작업을 실행할 때 사용한다. 
-- 런루프에 등록이 되어 실행되며, invalidate 될 경우 nil이 되며 헤제된다. 
+- **일정 주기마다 특정한 작업을 처리하기 위해 사용**할 수 있음
+- **scheduledTimer(withTimeInterval:, repeats:) { timer in ... }** 
+  - **일정 주기별로 작업을 실행할 때 사용**한다. 
+- **런루프에 등록이 되어 실행되며, invalidate 될 경우 nil이 되며 해제**된다. 
 - 만약 **타이머가 nil인데 fire()함수로 타이머를 사용하려고 하면 앱크래시가 발생할 수 있다.** 
   - 그러므로 **이런 부분의 안정성을 확보하기 위해 weak키워드를 사용하는 것이 좋다.** 
 
@@ -1197,7 +1234,7 @@ print("total banana price : \(banana.price)") // 20
 ### # UIStackView의 장점 
 
 - **복잡한 제약 설정 없이 비교적 간단하게 복잡한 뷰 구조를 구현**할 수 있다. 
-- **arrangedSubview로 UIStackView의 subView들이 관리**되며 하위뷰를은 UIStackView의 **alignment(세로방향), distribution(가로방향), Axis(가로/세로 기준), spacing(subView 간 간격)**의 규칙에 의해 위치가 지정된다. 
+- **arrangedSubview로 UIStackView의 subView들이 관리**되며 하위뷰를은 UIStackView의 **alignment(세로방향), distribution(가로방향), Axis(가로/세로 기준), spacing(subView 간 간격)**의 **규칙에 의해 위치가 지정**된다. 
 
 
 
@@ -1207,7 +1244,7 @@ print("total banana price : \(banana.price)") // 20
 
 ### # AutoLayout Constraint, Priority의 개념
 
-- 이름 그대로 AutoLayout 간 제약, 우선순위값을 의미한다. 
+- 이름 그대로 **AutoLayout 간 제약, 우선순위값을 의미한**다. 
   - 일반적으로 제약 간의 충돌이 일어나지 않게 제약을 설정해야하나, 상황에 따라 뷰의 크기가 유동적으로 변하는 경우가 있을 수 있다. 
   - **이런 제약값이 서로 충돌날 수 있는 경우가 있을때의 우선순위를 결정함으로서 제약의 충돌을 방지**할 수 있게 된다. 
 
@@ -1412,7 +1449,7 @@ queue.addOperation {
 
 ### # associatedtype 
 
-- 일반적으로 변수가 특정 자료형으로 선언되면 그 이외의 자료형으로 동적으로 타입이 변할 수 없다. 
+- 일반적으로 변수가 특정 자료형으로 선언되지만 associatedtype을 통해 그 이외의 자료형으로 동적으로 타입이 변할 수 없다. 
   - 이때 타입을 동적으로 사용할 수 있도록 해주는 건이 associatedtype이다. 
 - associatedtype의 사용 예시)
 
@@ -1558,7 +1595,7 @@ object.someMethod()
 
 - **Defer**
 
-  - 해당 블럭을 벗어날 때 실행할 작업을 블록  내에서 앞서 지정할 수 있다. 
+  - **해당 블럭을 벗어날 때 실행할 작업을 블록  내에서 앞서 지정**할 수 있다. 
 
   ~~~swift
   // defer 활용 예시)
