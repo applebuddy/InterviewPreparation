@@ -616,6 +616,74 @@ class NSObject
 
 
 
+<br><br>
+
+
+
+### # 프로퍼티의 종류
+
+### ## 저장 프로퍼티 
+
+- **기본적인 형태의 프로퍼티 선언** 
+- 말 그대로 특정 값을 저장해 놓은 프로퍼티
+
+~~~ swift
+var numb: Int = 0 // 저장 프로퍼티
+~~~
+
+<br>
+
+### ## 계산 프로퍼티 
+
+- **읽기, 쓰기에 따른 값을 그때그때 계산한 값을 내놓는 프로퍼티**
+- **get or get+set 으로 구성**된다.
+  - **get 만 구현할 경우 return ~~~ 으로만 표현**해도 된다. 
+
+~~~ swift
+class Point {
+  	var pValue: Int = 0
+  
+  	// 읽기(get)만 지원하는 계산프로퍼티, calcValue
+  	var calcValue: Int { 
+        return pValue
+    }
+  
+  	// getter, setter를 모두 지원하는 계산프로퍼티, calcValue2
+    var calcValue: Int {
+      	get {
+          	return pValue * 2
+        }
+      	set {
+          	pValue = newValue * 3
+        }
+    }
+}
+~~~
+
+<br>
+
+### ## 프로퍼티 감시자 
+
+- **값이 변화했을때 변화전 or 변화후의 값을 처리할 수 있는 프로퍼티**
+- **didSet(값 변동 시 이전 값(oldValue)을 통해 처리) or willSet(값 변동 시 변동된 값(newValue)을 통해 처리)을 사용**한다. 
+- **계산 프로퍼티 기능과 함께 사용할 수 없다.** 
+
+~~~ swift
+// 프로퍼티 감시자 (Observer Property) 사용 예시
+private var isAPIDataRequested: Bool = false {
+  	willSet {
+      	DispatchQueue.main.async {
+          	// 값이 바뀌었을 때 바뀐 값이 true면 데이터 로딩을 실행, 반대의 경우 데이터 로딩을 중단한다. 
+          	if newValue {
+								self.startDataLoading()
+            } else {
+              	self.stopDataLoading()
+            }
+        }
+    }
+}
+~~~
+
 
 
 <br><br>
@@ -860,6 +928,43 @@ protocol AProtocol: InheritedProtocolA, InheritedProtocolB {
   	init(arg: Type)
 }
 ~~~
+
+<br>
+
+
+
+### ## 주요 프로토콜 종류
+
+- Hashable
+
+  - Hash값을 제공하는 타입 
+  - Dictionary의 KeyType은 Hashable 프로토콜을 준수하는 값만 사용 가능하다. 
+  - Set 타입은 Hashable 프토토콜을 준수한 값만 사용 가능하다. 
+  - Hashable 프토토콜을 준수하기 위해서는 ==연산자, hashValue프로퍼티를 제공해야 한다. 
+
+  ~~~ swift
+  extension ToAdjustHash: Hashable {
+      // hashValue 계산 프로퍼티의 정의
+    	var hashValue: Int {
+  				return x.hashValue ^ y.hashValue &* 1675827
+      }
+    	
+      // == 연산자의 정의
+    	static func == (lhs: GridPoint, rhs GridPoint) -> Bool {
+        	return lhs.x == rhs.x && lhs.y == rhs.y
+      }
+  }
+  ~~~
+
+  
+
+<br>
+
+
+
+
+
+
 
 <br><br>
 
