@@ -191,47 +191,51 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
   - **최악의 상황에서 복잡도는 O(N^2)** 이다.
     - **이미 정렬이 되어있는 상태에서 비펏이 양 끝에 위치할 경우 N^2번을 순회**하며 **분할정복의 이점을 활용하지 못하기 때문**이다. 
   
-  ~~~ swift
-  // MARK: - QuickSort Example with Swift
-  import Foundation
-  
-  func quickSort(_ arr: inout [Int], _ start: Int, _ end: Int) {
-      if start >= end { return } // 원소가 한 개인 경우 바로 종료
-      
-      let key = start // 키는 첫번째 원소
-      var i = start + 1
-      var j = end
-      var temp = 0
-      
-      while i <= j { // 엇갈릴 때 까지 반복
-          while arr[i] <= arr[key] {
-              i += 1
-          }
-          
-          while arr[j] >= arr[key] && j > start {
-              j -= 1;
-          }
-          
-          if i > j {
-              temp = arr[j]
-              arr[j] = arr[key]
-              arr[key] = temp
-          } else {
-              temp = arr[i]
-              arr[i] = arr[j]
-              arr[j] = temp
-          }
-      }
-      
-      quickSort(&arr, start, j-1)
-      quickSort(&arr, j+1, end)
-  }
-  
-  var arr = [3,1,5,4,2,6,9,7,8,0]
-  quickSort(&arr, 0, arr.count-1) // 퀵정렬에 의해 오름차순 정렬이 된다.
-  print(arr) // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-  
-  ~~~
+~~~ swift
+// MARK: - QuickSort Example with Swift
+import Foundation
+
+func quickSort(_ arr: inout [Int], _ start: Int, _ end: Int) {
+    // 재귀 호출 간 원소가 1개인 경우 그대로 종료
+    // 해당 영역은 이미 더이상 바꿀 필요가 없기 때문
+    if start >= end { return } 
+    // 재귀 호출 간 key를 현재 재귀영역 맨 앞의 값으로 설정한다. 
+    let key = start
+    var i = start + 1
+    var j = end
+    var temp = 0
+    
+    while i <= j {
+        while arr[i] <= arr[key] {
+            i += 1
+        }
+        
+        while arr[j] >= arr[key] && j > start {
+            j -= 1
+        }
+        
+        // left, right 인덱스가 어긋나면 j인덱스의 값과 key값을 바꾼다. 이 경우 키 값은 정렬된 상태로 Fix되며, key값 좌/우는 key값보다 작고 ~ 큰 값으로 나뉘어진다. 이후 분할정복알고리즘을 활용하여 재귀함수로 정렬를 지속 수행한다. 
+        if i > j {
+            temp = arr[key]
+            arr[key] = arr[j]
+            arr[j] = temp
+        } else {
+            // 아직 left, right 인덱스를 체크했음에도  교차하지 않았을 경우, left, right 인덱스의 값을 Swap시킨다.
+            temp = arr[i]
+            arr[i] = arr[j]
+            arr[j] = temp
+        }
+    }
+    
+    // 분할정복알고리즘 수행 (Recursion)
+    quickSort(&arr, start, j-1)
+    quickSort(&arr, j+1, end)
+}
+
+var arr = [3,1,5,4,2,6,9,7,8,0]
+quickSort(&arr, 0, arr.count-1) // 오름차순 정렬을 수행한다. 
+print(arr)
+~~~
 
 <br>
 
