@@ -34,430 +34,6 @@
 
 <br><br>
 
-# @ CS 기술 질문
-
-
-
-## # 알고리즘
-
-## ## 자료구조
-
-### **연결리스트 (Linked List)**
-
-- **선형적으로 단방향으로 연결된 값의 컬렉션**
-- **연결리스트 각각의 노드는 값과 next Node의 포인터를 갖고 있다.** 
-- **Head Node 추가를 제외한 일반적인 경우 노드 추가, 삭제 시간복잡도는 O(N)으로 비효율** 적인 편인 자료구조
-- **연결리스트, Linked List 구현 예시 ▼**
-
-~~~ swift
-
-// MARK: Implementation of LinkedList in Swift
-// MARK: - Node Definition
-public class Node<T> {
-    public var value: Int
-    public var next: Node?
-    
-    public init (value: Int, _ next: Node? = nil) {
-        // 두번째 매개변수는 만약 지정되지 않았을 때 default값을 nil로 주도록 설정한다.
-        self.value = value
-        self.next = next
-    }
-}
-
-// MARK: - Prints Node Data
-extension Node: CustomStringConvertible {
-    public var description: String {
-        guard let next = next else {
-            return "\(value)" // 다음 노드가 없다면 현재 값만 출력한다.
-        }
-        
-        // 다음 노드(next)가 존재한다면 guard let 이후 코드도 실행된다. -> 다음 노드도 출력한다.
-        return "\(value) -> \(String(describing: next)) "
-    }
-}
-
-let node1 = Node<Int>(value: 1)
-let node2 = Node<Int>(value: 3)
-let node3 = Node<Int>(value: 5)
-node1.next = node2
-node2.next = node3
-print(node1.description)
-
-~~~
-
-<br><br>
-
-### **이진트리, Binary Tree**
-
-- **각각 0~2개의 노드를 갖는 이진트리 자료구조**
-- **각 노드는 leftChild?, rightChild?, 자신의 value를 갖는다.** 
-- **모든 노드가  leftChild, rightChild를 갖는 트리를 Full  Binary Tree** 라고 한다. 
-- **Full Binary Tree 상태 + 최하위 노드가 몇개 비어있는 경우에는 작은 의미까지 포함할 경우 Complete Binary Tree**라고 하며, **Heap 자료구조로서 활용**될 수 있다.
-- **InOrder** 
-  - **트리를 최 좌측 -> 우측 순으로 차례대로 출력**하는 순서 방식 
-  - **중간에 RootNode의 순서**가 온다. 
-  - **처음에 RootNode의 leftChild를 순회하는 재귀호출 -> rootNode 값을 출력 -> rightChild를 순회하는 재귀호출**
-- **PreOrder**
-  - **처음에 RootNode의 순서**가 온다.
-  - **처음에 RootNode 값을 출력 -> leftChild를 순회하며 출력하는 재귀 호출 -> rightChild를 순회하며 출력하는 재귀 호출**
-- **PostOrder**
-  - **마지막에  RootNode의 순서**가 온다.
-  - **처음에 leftChild를 순회하며 출력하는 재귀호출 -> rightChild를 순회하며 출력하는 재귀호출 -> 마지막에 RootNode 값을 출력**
-- **이진트리, Binary Tree 구현 예시 ▼**
-
-~~~ swift
-// MARK: - 이진트리, Binary Tree Example
-
-public class BinaryTreeNode<T> {
-    public var value: T
-    public var leftChild: BinaryTreeNode? // 왼쪽 자식노드
-    public var rightChild: BinaryTreeNode? // 오른쪽 자식노드
-    public init(value: T) {
-        self.value = value
-    }
-    
-    // In-Order 탐색
-    public func traverseInOrder(visit: (T) -> ()) {
-        leftChild?.traverseInOrder(visit: visit)
-        visit(value) // 값을 받아 실행하는 반환값 없는 클로저가 실행되는데 이때의 값은 순회중인 현재 인스턴스의 value가 된다.
-        rightChild?.traverseInOrder(visit: visit)
-    }
-    
-    public func traversePreOrder(visit: (T) -> ()) {
-        visit(value)
-        leftChild?.traversePreOrder(visit: visit)
-        rightChild?.traversePreOrder(visit: visit)
-    }
-    
-    public func traversePostOrder(visit: (T) -> ()) {
-        leftChild?.traversePostOrder(visit: visit)
-        rightChild?.traversePostOrder(visit: visit)
-        visit(value)
-    }
-}
-
-let rootTree = BinaryTreeNode<Int>(value: 0)
-let one = BinaryTreeNode<Int>(value: 1)
-let two = BinaryTreeNode<Int>(value: 2)
-let three = BinaryTreeNode<Int>(value: 3)
-let four = BinaryTreeNode<Int>(value: 4)
-let five = BinaryTreeNode<Int>(value: 5)
-
-rootTree.leftChild = one
-rootTree.rightChild = two
-one.leftChild = three
-one.rightChild = four
-two.leftChild = five
-
-// traverseInOrder의 처음이자 마지막 매개변수는 값을 받아 실행하는 클로져였다.
-// 마지막 매개변수이므로 해당 클로져는 후행클로져 형태로 넣어 아래와 같이 실행할 수 있다.
-// 현재 구성한 트리의 상태 ▼
-
-//.        0 <- Root Node
-//.    1       2  <- Sub Node
-//.  3   4   5
-
-// InOrder 출력 결과 -> 3 1 4 0 5 2
-print("traverseInOrder Result ▼")
-rootTree.traverseInOrder { print($0, terminator: "->") }
-print()
-print("traversePreOrder Result ▼")
-rootTree.traversePreOrder { print($0, terminator: "->") }
-print()
-print("traversePostOrder Result ▼")
-rootTree.traversePostOrder { print($0, terminator: "->") }
-
-// traverseInOrder Result ▼
-// 3->1->4->0->5->2->
-// traversePreOrder Result ▼
-// 0->1->3->4->2->5->
-// traversePostOrder Result ▼
-// 3->4->1->5->2->0->
-~~~
-
-<br><br>
-
-## ## Sorting Methods, 정렬 방법
-
-- **안정정렬/불안정정렬의 차이** : **같은 값이 존재할때 해당 값들의 인덱스 순서가 정렬 후에 유지될 수 있는지 여부에 따라 결정**된다. 
-
-- **퀵 정렬 (Quick Sort)**
-  - **평균적으로 단일 정렬기법 중 가장 좋은 성능을 보이는 정렬방법**, **피벗을 기준으로 피벗보다 작은값, 큰값을 비교하며 재귀, 분할정복방식으로 정렬을 수행**한다. 
-  - **파티션, 분할정복을 활용**한다. 
-    - **한번 파티션이 진행될 때마다 피벗을 기준으로 좌 우는 각각 피벗보다 작고(좌측) 피벗보다 큰(우측) 값으로 나뉘어 진다. 파티션이 된 후 양쪽에서 재귀적으로 분할정복방식으로 정렬**이 이루어진다.
-  - **같은 값의 인덱스 위치가 바뀔 수 있는 불안정 정렬**
-  - **최적의 상황에서 복잡도는 O(NlogN)** 이다.
-    - 분할정복 알고리즘이 적용되어 정렬 체크구간이 쪼개질 수록 복잡도가 줄어든다.
-  - **최악의 상황에서 복잡도는 O(N^2)** 이다.
-    - **이미 정렬이 되어있는 상태에서 피벗이 양 끝에 위치할 경우 N^2번을 순회하며 분할정복의 이점을 활용하지 못하기 때문**이다. 
-~~~ swift
-import Foundation
-
-func quickSort(_ arr: inout [Int], _ start: Int, _ end: Int) {
-    if start >= end { return }
-    let key = start
-    var left = start + 1
-    var right = end
-    var temp = 0
-    while left <= right {
-        while left <= end && arr[key] >= arr[left] {
-            left += 1
-        }
-        
-        while right > start && arr[key] <= arr[right] {
-            right -= 1
-        }
-        
-        if left > right {
-            temp = arr[right]
-            arr[right] = arr[key]
-            arr[key] = temp
-        } else {
-            temp = arr[right]
-            arr[right] = arr[left]
-            arr[left] = temp
-        }
-    } 
-    
-    quickSort(&arr, start, right-1)
-    quickSort(&arr, right+1, end)
-}
-
-var arr = [3,1,5,4,2,6,9,7,8,0]
-quickSort(&arr, 0, arr.count-1)
-print(arr)
-
-~~~
-
-<br>
-
-- **병합 정렬 (Merge Sort)**
-  - **전체 배열집합을 하나의 단위로 분할 한 뒤 분할한 원소를 다시 병합하는 정렬** 방식
-  - **퀵정렬과 함께 분할정복 정렬 알고리즘 기법 중 하나**
-  - 불안정 정렬인 퀵정렬과 달리 **안정 정렬**
-- **계수정렬 (Counting Sort)**
-  - 계수가능 범위에서 배열 인덱스를 이용해 요소를 정렬한다. 
-  - **복잡도는 O(N)로 매우 효율적**이다.
-  - **일정 이상의 계수범위를 넘어갈 시 메모리의 과부하가 발생**할 수 있다. 
-    - **매우 큰 계수 범위에 대한 사용 제한**
-- **힙 정렬 (Heap Sort)** 
-  - **Complete Binary Tree를 이용한 Heap 정렬**
-  - **루트노드는 항상 최대 or 최솟값(특정 조건 하 Top 값)을 가진다.**
-    - **이후 루트의 값을 마지막 자식노드와 바꾼 뒤 하위 노드와 크기를 비교하며 재정렬**을 하며 이를 **N번 반복하여 전체 정렬을 달성**한다. 
-  - **불안정 정렬**
-  - **일반 적인 복잡도는 어떤 정렬조건에서든 안정적인 O(NlogN)이다.**
-- **삽입 정렬 (Insert Sort)**
-  - 좌측부터해서 각 요소가 들어갈 위치를 현재까지 거쳐간 영역에 한해 순회탐색하여 비교하고 적절한 위치에 넣어준다. 
-  - 인간이 기본적으로 정렬할때 사용하는 방법과 유사한 기법
-  - **일반 적인 복잡도는 O(N^2)이다.**
-  - 하지만 **배열의 사이즈가 적거나 이미 정렬이 거의 되어 있는 경우 빠른 속도**를 보여주며 이로인해 **팀 정렬, 인트로 정렬 등의 하이브리드 정렬기법에 함께 활용**되기도 한다. 
-- **팀 정렬 (Tim Sort)**
-  - **자바, 파이썬, 스위프트 등의 언어에서 기본 정렬로 제공하는 하이브리드 정렬 기법**
-  - **병합 + 삽입정렬의 하이브리드 정렬**기법
-- **인트로 정렬 (Intro Sort)**
-  - **C++ 등의 언어에서 기본 정렬로 제공하는 하이브리드 정렬 기법**
-  - **퀵 + 힙정렬 + (삽입정렬)의 하이브리드 정렬**기법
-    - 팀 정렬처럼 정렬 파티션이 적을때 삽입정렬을 혼용하기도 한다. 
-
-<br>
-
-## ## C++ 문법 용어 정리
-
-### ### C++ 언어
-
-- **대표적인 객체지향 프로그래밍 언어** 
-- **C++ 언어의 특징**
-  - **캡슐화**
-    - 캡슐화된 객체의 세부 내용은 외부에서 볼수 없게 숨길 수 있다. 
-    - **정보 은닉 및 재사용의 용이성**
-  - **추상화**
-    - **객체의 속성 중 가장 중요한 것에 중점을 두어 모델링** 하는 것
-    - **프로그램 구조 및 구성을 직관적으로 볼 수 있다.** 
-  - **상속성**
-    - **상위 클래스의 속성을 물려받은 자식 객체를 정의할 수 있다.** 
-    - **소프트웨어 재사용성을 증대**시켜준다. 
-  - **다형성**
-    - **오버라이딩을 지원하여 virtual 키워드 등을 통해 오버라이딩 된 자식클래스의 메서드나 프로퍼티를 사용할 수 있다.** 
-    - **다형성을 통해 같은 이름의 메서드여도 어떤 객체를 접근하냐에 따라 고유한 방법으로 사용가능**하다.
-- **C++은 정적바인딩 (Static Dispatch)을 원칙**으로 작동한다.
-  - **동적바인딩을 통해 서브클래스의 오버라이딩 메서드를 사용하기 위해서는 virtual등의 키워드 지정이 필요**하다.
-
-<br>
-
-- **배열 포인터 vs 포인터 배열**
-  - **배열 포인터는 배열의 시작주소값을 저장하는 포인터**이다.
-  - **포인터 배열은 주소값들을 저장하는 배열**이다.
-
-<br><br>
-
-## # 네트워크
-
-### ## HTTP 
-
-- **하이퍼텍스트 전송 프로토콜** (Hyper Text Transfer Protocol)
-- **클라이언트 ~ 서버 간 이루어지는 요청(Request)/응답(Response) 프로토콜**
-
-
-
-### ## HTTP 응답코드 종류
-
-- 100
-  - Continue, 클라이언트로부터 일부 요청을 받았으며 나머지 정보를 계속 요청
-- **2xx**
-  - 일반적으로 **요청이 성공적으로 수행 될 경우 2xx 응답코드를 수신**한다. 
-- 3xx
-  - 리다이렉션 -
-- **4xx**
-  - **클라이언트 측 오류** 응답 코드
-- **5xx**
-  - **서버 측 오류** 응답 코드
-
-<br>
-
-### ## HTTP 메서드 종류
-
-- **GET**
-  - GET 요청 방식은 **서버 특정 URL이 가진 정보를 읽기위해 요청하는 메서드**이다.
-- **POST**
-  - POST 요청 방식은 **서버 특정 URL에 데이터를 전송해서 추가할 때 사용**한다. 
-  - 클라이언트 측에서 명확한 자원의 위치를 지정하지 않는다. 
-
-- HEAD
-  - GET 요청방식과 유사하나 단, **헤더정보만 가져온다.** 
-- OPTIONS
-  - **웹서버에서 지원되는 메소드 종류를 확인**한다.
-- PUT
-  - **자원을 전체적으로 업데이트 요청** 한다. 
-  - 클라이언트 측에서 명확한 자원의 위치를 지정한다. 
-- PATCH
-  - **자원 일부를 업데이트 요청** 한다. 
-- DELETE
-  - **특정 자원을 삭제 요청**한다.
-
-
-
-### ## OSI 7계층
-
-- 1) 물리 계층
-- 2) 데이터링크 계층
-- 3) 네트워크 계층
-- 4) 전송 계층
-- 5) 세션 계층
-- 6) 프레젠테이션 계층
-- 7) 애플리케이션 계층
-
-### ## TCP/IP 4계층
-
-- 1) 네트워크 접근 계층
-- 2) 인터넷 계층
-- 3) 전송 계층
-- 4) 애플리케이션 계층
-
-
-
-### ## TCP vs UDP
-
-- **TCP** (Transmission Control Protocol)
-  - **전송 제어 프로토콜 규약**
-  - **연결형 서비스로 가상 회선 방식을 제공**
-  - **3-way handshaking 과정을 통해 연결설정**, **4-way handshaking으로 해제**한다. 
-    - **목적지 ~ 수신지를 확실히 하여 정확한 전송 보장**을 위해 3-way/4-way handshaking을 사용한다. 
-  - **높은 신뢰성을 보장**한다. 
-  - **절차가 복잡하여 UDP보다 느리다.**
-  - **전이중(Full-Duplex), 점대점(Point to Point) 방식**
-- **UDP** (User Datagram Protocol)
-  - **사용자 데이터그램 프로토콜 규약**
-    - **데이터를 데이터그램 단위로 처리**하는 규약
-    - **데이터그램 : 독립적인 관계를 지니는 패킷**
-  - **비연결형 서비스**
-  - **서버 소켓은 연결만을 담당한다.** 
-  - **서버 ~ 클라이언트는 1대1로 연결**된다. 
-  - **전송 데이터의 크기가 무제한**이다.
-  - **신뢰성을 보장할 수 없다.** 
-  - **절차가 단순하여 TCP보다 빠르다.**
-
-<br><br>
-
-
-
-## # 데이터베이스
-
-
-
-### ## DBMS
-
-- **데이터베이스 관리 시스템** (Database Management System)
-  - 다수의 사용자들이 **DB 내의 데이터를 접근할 수 있도록 해주는 SW도구의 집합**
-
-
-
-### ## 데이터베이스 문법
-
-- **SELECT** [열]
-
-  - **특정 열을 선택하는데 사용**한다. **(필수)**
-
-- **FROM** [테이블]
-
-  - **특정 테이블을 조회할 때 사용**한다. **(필수)**
-  - **"A" 테이블의 전체열 조회 예시 ▼**
-
-  ~~~ sql
-  SELECT * FROM "A" 
-  ~~~
-
-  
-
-- **WHERE** [조건]
-  
-- 특정 조건에 따라 조회할 때 사용한다. (선택)
-  
-- **GROUP BY**
-
-  - **동일한 값을 가진 데이터를 집계해서 조회하고자 할 때 사용**하는 문장 (선택)
-
-- **ORDER BY**
-
-  - **오름차순(ascribing) or 내림차순(describing)으로 정렬할때 사용**하는 문법
-
-  ~~~ sql
-  SELECT NAME, COUNT(NAME) FROM TABLE
-  FROM CART_PRODUCTS GROUP BY CART_ID ORDER BY COUNT(NAME);
-  ~~~
-
-  
-
-<br>
-
-### ## 데이터베이스 용어정리
-
-- **트랜젝션**
-  - **트랜잭션은 데이터베이스의 논리적 연산단위**이다.
-  - 데이터베이스 내에서 한꺼번에 수행되어야 할 일련의 연산집합
-
-- **NoSQL**
-  - **Not Only SQL의 약자,** 기존의 RDBMS와 다른 형태의 데이터로 저장하는 기술
-  - 트랜잭션을 지원하지 않는다.
-
-- **DDL** (Data Definition Language)
-  - **데이터 정의 언어**
-  - 데이터베이스 스키마를 정의 or 조작하기 위해 사용한다. 
-  - CREATE, ALTER, DROP, TRUNCATE 등이 있다. 
-- **DML** (Data Manipulation Language)
-  - **데이터 조작 언어**, 데이터를 조작하기 위해 사용한다. 
-  - SELECT, INSERT, DELETE, UPDATE
-- **DCL** (Data Control Language)
-  - **데이터 제어언어**
-  - 데이터의 보안, 무결성 등을 정의하는데 사용한다. 
-  - COMMIT, ROLLBACK, GRANT, REVOKE
-- **DQL** (Data Query Language)
-  - **SELECT만을 따로 분리해서 쿼리로 표현**하는 언어
-- **TCL** (transaction Control Language)
-  - **트랜젝션 제어 언어**
-
-<br><br>
-
-
 
 
 
@@ -481,15 +57,13 @@ print(arr)
   - **Swift 5.1버전으로 추가 된 Opaque Type (불투명 타입)**
   -  **프로토콜 명을 some 뒤에 선언하여 구체적인 반환타입을 숨길 수 있도록 해준다.** 
 
-  ~~~ swift
-  // makeCollection Method는 return 타입으로 구체적 타입을 지정하지 않고 Collection 프로토콜을 준수하는 타입이라는 것만 명시해줄 수 있다. 
-  // -> OpaqueType을 사용하여 구체적인 타입을 숨길 수 있다. -> 말 그대로 불투명 타입
-  func makeCollection() -> some Collection { 
-    	return [1, 2, 3]
-  }
-  ~~~
-
-  
+~~~ swift
+// makeCollection Method는 return 타입으로 구체적 타입을 지정하지 않고 Collection 프로토콜을 준수하는 타입이라는 것만 명시해줄 수 있다. 
+// -> OpaqueType을 사용하여 구체적인 타입을 숨길 수 있다. -> 말 그대로 불투명 타입
+func makeCollection() -> some Collection { 
+return [1, 2, 3]
+}
+~~~
 
 <br><br>
 
@@ -549,6 +123,7 @@ class Observer: NSObject {
 ~~~
 
 <br>
+
 
 ### KVO 제외(옵저버 삭제)하기 
 - 특정 감시를 중단하고 싶다면, removeObserver로 Observer를 제거할 수 있다. 
@@ -1712,4 +1287,427 @@ object.someMethod()
   
   ~~~
 
+
+
+# @ CS 기술 질문
+
+
+
+## # 알고리즘
+
+## ## 자료구조
+
+### **연결리스트 (Linked List)**
+
+- **선형적으로 단방향으로 연결된 값의 컬렉션**
+- **연결리스트 각각의 노드는 값과 next Node의 포인터를 갖고 있다.** 
+- **Head Node 추가를 제외한 일반적인 경우 노드 추가, 삭제 시간복잡도는 O(N)으로 비효율** 적인 편인 자료구조
+- **연결리스트, Linked List 구현 예시 ▼**
+
+~~~ swift
+
+// MARK: Implementation of LinkedList in Swift
+// MARK: - Node Definition
+public class Node<T> {
+    public var value: Int
+    public var next: Node?
+    
+    public init (value: Int, _ next: Node? = nil) {
+        // 두번째 매개변수는 만약 지정되지 않았을 때 default값을 nil로 주도록 설정한다.
+        self.value = value
+        self.next = next
+    }
+}
+
+// MARK: - Prints Node Data
+extension Node: CustomStringConvertible {
+    public var description: String {
+        guard let next = next else {
+            return "\(value)" // 다음 노드가 없다면 현재 값만 출력한다.
+        }
+        
+        // 다음 노드(next)가 존재한다면 guard let 이후 코드도 실행된다. -> 다음 노드도 출력한다.
+        return "\(value) -> \(String(describing: next)) "
+    }
+}
+
+let node1 = Node<Int>(value: 1)
+let node2 = Node<Int>(value: 3)
+let node3 = Node<Int>(value: 5)
+node1.next = node2
+node2.next = node3
+print(node1.description)
+
+~~~
+
+<br><br>
+
+### **이진트리, Binary Tree**
+
+- **각각 0~2개의 노드를 갖는 이진트리 자료구조**
+- **각 노드는 leftChild?, rightChild?, 자신의 value를 갖는다.** 
+- **모든 노드가  leftChild, rightChild를 갖는 트리를 Full  Binary Tree** 라고 한다. 
+- **Full Binary Tree 상태 + 최하위 노드가 몇개 비어있는 경우에는 작은 의미까지 포함할 경우 Complete Binary Tree**라고 하며, **Heap 자료구조로서 활용**될 수 있다.
+- **InOrder** 
+  - **트리를 최 좌측 -> 우측 순으로 차례대로 출력**하는 순서 방식 
+  - **중간에 RootNode의 순서**가 온다. 
+  - **처음에 RootNode의 leftChild를 순회하는 재귀호출 -> rootNode 값을 출력 -> rightChild를 순회하는 재귀호출**
+- **PreOrder**
+  - **처음에 RootNode의 순서**가 온다.
+  - **처음에 RootNode 값을 출력 -> leftChild를 순회하며 출력하는 재귀 호출 -> rightChild를 순회하며 출력하는 재귀 호출**
+- **PostOrder**
+  - **마지막에  RootNode의 순서**가 온다.
+  - **처음에 leftChild를 순회하며 출력하는 재귀호출 -> rightChild를 순회하며 출력하는 재귀호출 -> 마지막에 RootNode 값을 출력**
+- **이진트리, Binary Tree 구현 예시 ▼**
+
+~~~ swift
+// MARK: - 이진트리, Binary Tree Example
+
+public class BinaryTreeNode<T> {
+    public var value: T
+    public var leftChild: BinaryTreeNode? // 왼쪽 자식노드
+    public var rightChild: BinaryTreeNode? // 오른쪽 자식노드
+    public init(value: T) {
+        self.value = value
+    }
+    
+    // In-Order 탐색
+    public func traverseInOrder(visit: (T) -> ()) {
+        leftChild?.traverseInOrder(visit: visit)
+        visit(value) // 값을 받아 실행하는 반환값 없는 클로저가 실행되는데 이때의 값은 순회중인 현재 인스턴스의 value가 된다.
+        rightChild?.traverseInOrder(visit: visit)
+    }
+    
+    public func traversePreOrder(visit: (T) -> ()) {
+        visit(value)
+        leftChild?.traversePreOrder(visit: visit)
+        rightChild?.traversePreOrder(visit: visit)
+    }
+    
+    public func traversePostOrder(visit: (T) -> ()) {
+        leftChild?.traversePostOrder(visit: visit)
+        rightChild?.traversePostOrder(visit: visit)
+        visit(value)
+    }
+}
+
+let rootTree = BinaryTreeNode<Int>(value: 0)
+let one = BinaryTreeNode<Int>(value: 1)
+let two = BinaryTreeNode<Int>(value: 2)
+let three = BinaryTreeNode<Int>(value: 3)
+let four = BinaryTreeNode<Int>(value: 4)
+let five = BinaryTreeNode<Int>(value: 5)
+
+rootTree.leftChild = one
+rootTree.rightChild = two
+one.leftChild = three
+one.rightChild = four
+two.leftChild = five
+
+// traverseInOrder의 처음이자 마지막 매개변수는 값을 받아 실행하는 클로져였다.
+// 마지막 매개변수이므로 해당 클로져는 후행클로져 형태로 넣어 아래와 같이 실행할 수 있다.
+// 현재 구성한 트리의 상태 ▼
+
+//.        0 <- Root Node
+//.    1       2  <- Sub Node
+//.  3   4   5
+
+// InOrder 출력 결과 -> 3 1 4 0 5 2
+print("traverseInOrder Result ▼")
+rootTree.traverseInOrder { print($0, terminator: "->") }
+print()
+print("traversePreOrder Result ▼")
+rootTree.traversePreOrder { print($0, terminator: "->") }
+print()
+print("traversePostOrder Result ▼")
+rootTree.traversePostOrder { print($0, terminator: "->") }
+
+// traverseInOrder Result ▼
+// 3->1->4->0->5->2->
+// traversePreOrder Result ▼
+// 0->1->3->4->2->5->
+// traversePostOrder Result ▼
+// 3->4->1->5->2->0->
+~~~
+
+<br><br>
+
+## ## Sorting Methods, 정렬 방법
+
+- **안정정렬/불안정정렬의 차이** : **같은 값이 존재할때 해당 값들의 인덱스 순서가 정렬 후에 유지될 수 있는지 여부에 따라 결정**된다. 
+
+- **퀵 정렬 (Quick Sort)**
+  - **평균적으로 단일 정렬기법 중 가장 좋은 성능을 보이는 정렬방법**, **피벗을 기준으로 피벗보다 작은값, 큰값을 비교하며 재귀, 분할정복방식으로 정렬을 수행**한다. 
+  - **파티션, 분할정복을 활용**한다. 
+    - **한번 파티션이 진행될 때마다 피벗을 기준으로 좌 우는 각각 피벗보다 작고(좌측) 피벗보다 큰(우측) 값으로 나뉘어 진다. 파티션이 된 후 양쪽에서 재귀적으로 분할정복방식으로 정렬**이 이루어진다.
+  - **같은 값의 인덱스 위치가 바뀔 수 있는 불안정 정렬**
+  - **최적의 상황에서 복잡도는 O(NlogN)** 이다.
+    - 분할정복 알고리즘이 적용되어 정렬 체크구간이 쪼개질 수록 복잡도가 줄어든다.
+  - **최악의 상황에서 복잡도는 O(N^2)** 이다.
+    - **이미 정렬이 되어있는 상태에서 피벗이 양 끝에 위치할 경우 N^2번을 순회하며 분할정복의 이점을 활용하지 못하기 때문**이다. 
+~~~ swift
+import Foundation
+
+func quickSort(_ arr: inout [Int], _ start: Int, _ end: Int) {
+    if start >= end { return }
+    let key = start
+    var left = start + 1
+    var right = end
+    var temp = 0
+    while left <= right {
+        while left <= end && arr[key] >= arr[left] {
+            left += 1
+        }
+        
+        while right > start && arr[key] <= arr[right] {
+            right -= 1
+        }
+        
+        if left > right {
+            temp = arr[right]
+            arr[right] = arr[key]
+            arr[key] = temp
+        } else {
+            temp = arr[right]
+            arr[right] = arr[left]
+            arr[left] = temp
+        }
+    } 
+    
+    quickSort(&arr, start, right-1)
+    quickSort(&arr, right+1, end)
+}
+
+var arr = [3,1,5,4,2,6,9,7,8,0]
+quickSort(&arr, 0, arr.count-1)
+print(arr)
+
+~~~
+
+<br>
+
+- **병합 정렬 (Merge Sort)**
+  - **전체 배열집합을 하나의 단위로 분할 한 뒤 분할한 원소를 다시 병합하는 정렬** 방식
+  - **퀵정렬과 함께 분할정복 정렬 알고리즘 기법 중 하나**
+  - 불안정 정렬인 퀵정렬과 달리 **안정 정렬**
+- **계수정렬 (Counting Sort)**
+  - 계수가능 범위에서 배열 인덱스를 이용해 요소를 정렬한다. 
+  - **복잡도는 O(N)로 매우 효율적**이다.
+  - **일정 이상의 계수범위를 넘어갈 시 메모리의 과부하가 발생**할 수 있다. 
+    - **매우 큰 계수 범위에 대한 사용 제한**
+- **힙 정렬 (Heap Sort)** 
+  - **Complete Binary Tree를 이용한 Heap 정렬**
+  - **루트노드는 항상 최대 or 최솟값(특정 조건 하 Top 값)을 가진다.**
+    - **이후 루트의 값을 마지막 자식노드와 바꾼 뒤 하위 노드와 크기를 비교하며 재정렬**을 하며 이를 **N번 반복하여 전체 정렬을 달성**한다. 
+  - **불안정 정렬**
+  - **일반 적인 복잡도는 어떤 정렬조건에서든 안정적인 O(NlogN)이다.**
+- **삽입 정렬 (Insert Sort)**
+  - 좌측부터해서 각 요소가 들어갈 위치를 현재까지 거쳐간 영역에 한해 순회탐색하여 비교하고 적절한 위치에 넣어준다. 
+  - 인간이 기본적으로 정렬할때 사용하는 방법과 유사한 기법
+  - **일반 적인 복잡도는 O(N^2)이다.**
+  - 하지만 **배열의 사이즈가 적거나 이미 정렬이 거의 되어 있는 경우 빠른 속도**를 보여주며 이로인해 **팀 정렬, 인트로 정렬 등의 하이브리드 정렬기법에 함께 활용**되기도 한다. 
+- **팀 정렬 (Tim Sort)**
+  - **자바, 파이썬, 스위프트 등의 언어에서 기본 정렬로 제공하는 하이브리드 정렬 기법**
+  - **병합 + 삽입정렬의 하이브리드 정렬**기법
+- **인트로 정렬 (Intro Sort)**
+  - **C++ 등의 언어에서 기본 정렬로 제공하는 하이브리드 정렬 기법**
+  - **퀵 + 힙정렬 + (삽입정렬)의 하이브리드 정렬**기법
+    - 팀 정렬처럼 정렬 파티션이 적을때 삽입정렬을 혼용하기도 한다. 
+
+<br>
+
+## ## C++ 문법 용어 정리
+
+### ### C++ 언어
+
+- **대표적인 객체지향 프로그래밍 언어** 
+- **C++ 언어의 특징**
+  - **캡슐화**
+    - 캡슐화된 객체의 세부 내용은 외부에서 볼수 없게 숨길 수 있다. 
+    - **정보 은닉 및 재사용의 용이성**
+  - **추상화**
+    - **객체의 속성 중 가장 중요한 것에 중점을 두어 모델링** 하는 것
+    - **프로그램 구조 및 구성을 직관적으로 볼 수 있다.** 
+  - **상속성**
+    - **상위 클래스의 속성을 물려받은 자식 객체를 정의할 수 있다.** 
+    - **소프트웨어 재사용성을 증대**시켜준다. 
+  - **다형성**
+    - **오버라이딩을 지원하여 virtual 키워드 등을 통해 오버라이딩 된 자식클래스의 메서드나 프로퍼티를 사용할 수 있다.** 
+    - **다형성을 통해 같은 이름의 메서드여도 어떤 객체를 접근하냐에 따라 고유한 방법으로 사용가능**하다.
+- **C++은 정적바인딩 (Static Dispatch)을 원칙**으로 작동한다.
+  - **동적바인딩을 통해 서브클래스의 오버라이딩 메서드를 사용하기 위해서는 virtual등의 키워드 지정이 필요**하다.
+
+<br>
+
+- **배열 포인터 vs 포인터 배열**
+  - **배열 포인터는 배열의 시작주소값을 저장하는 포인터**이다.
+  - **포인터 배열은 주소값들을 저장하는 배열**이다.
+
+<br><br>
+
+## # 네트워크
+
+### ## HTTP 
+
+- **하이퍼텍스트 전송 프로토콜** (Hyper Text Transfer Protocol)
+- **클라이언트 ~ 서버 간 이루어지는 요청(Request)/응답(Response) 프로토콜**
+
+
+
+### ## HTTP 응답코드 종류
+
+- 100
+  - Continue, 클라이언트로부터 일부 요청을 받았으며 나머지 정보를 계속 요청
+- **2xx**
+  - 일반적으로 **요청이 성공적으로 수행 될 경우 2xx 응답코드를 수신**한다. 
+- 3xx
+  - 리다이렉션 -
+- **4xx**
+  - **클라이언트 측 오류** 응답 코드
+- **5xx**
+  - **서버 측 오류** 응답 코드
+
+<br>
+
+### ## HTTP 메서드 종류
+
+- **GET**
+  - GET 요청 방식은 **서버 특정 URL이 가진 정보를 읽기위해 요청하는 메서드**이다.
+- **POST**
+  - POST 요청 방식은 **서버 특정 URL에 데이터를 전송해서 추가할 때 사용**한다. 
+  - 클라이언트 측에서 명확한 자원의 위치를 지정하지 않는다. 
+
+- HEAD
+  - GET 요청방식과 유사하나 단, **헤더정보만 가져온다.** 
+- OPTIONS
+  - **웹서버에서 지원되는 메소드 종류를 확인**한다.
+- PUT
+  - **자원을 전체적으로 업데이트 요청** 한다. 
+  - 클라이언트 측에서 명확한 자원의 위치를 지정한다. 
+- PATCH
+  - **자원 일부를 업데이트 요청** 한다. 
+- DELETE
+  - **특정 자원을 삭제 요청**한다.
+
+
+
+### ## OSI 7계층
+
+- 1) 물리 계층
+- 2) 데이터링크 계층
+- 3) 네트워크 계층
+- 4) 전송 계층
+- 5) 세션 계층
+- 6) 프레젠테이션 계층
+- 7) 애플리케이션 계층
+
+### ## TCP/IP 4계층
+
+- 1) 네트워크 접근 계층
+- 2) 인터넷 계층
+- 3) 전송 계층
+- 4) 애플리케이션 계층
+
+
+
+### ## TCP vs UDP
+
+- **TCP** (Transmission Control Protocol)
+  - **전송 제어 프로토콜 규약**
+  - **연결형 서비스로 가상 회선 방식을 제공**
+  - **3-way handshaking 과정을 통해 연결설정**, **4-way handshaking으로 해제**한다. 
+    - **목적지 ~ 수신지를 확실히 하여 정확한 전송 보장**을 위해 3-way/4-way handshaking을 사용한다. 
+  - **높은 신뢰성을 보장**한다. 
+  - **절차가 복잡하여 UDP보다 느리다.**
+  - **전이중(Full-Duplex), 점대점(Point to Point) 방식**
+- **UDP** (User Datagram Protocol)
+  - **사용자 데이터그램 프로토콜 규약**
+    - **데이터를 데이터그램 단위로 처리**하는 규약
+    - **데이터그램 : 독립적인 관계를 지니는 패킷**
+  - **비연결형 서비스**
+  - **서버 소켓은 연결만을 담당한다.** 
+  - **서버 ~ 클라이언트는 1대1로 연결**된다. 
+  - **전송 데이터의 크기가 무제한**이다.
+  - **신뢰성을 보장할 수 없다.** 
+  - **절차가 단순하여 TCP보다 빠르다.**
+
+<br><br>
+
+
+
+## # 데이터베이스
+
+
+
+### ## DBMS
+
+- **데이터베이스 관리 시스템** (Database Management System)
+  - 다수의 사용자들이 **DB 내의 데이터를 접근할 수 있도록 해주는 SW도구의 집합**
+
+
+
+### ## 데이터베이스 문법
+
+- **SELECT** [열]
+
+  - **특정 열을 선택하는데 사용**한다. **(필수)**
+
+- **FROM** [테이블]
+
+  - **특정 테이블을 조회할 때 사용**한다. **(필수)**
+  - **"A" 테이블의 전체열 조회 예시 ▼**
+
+  ~~~ sql
+  SELECT * FROM "A" 
+  ~~~
+
   
+
+- **WHERE** [조건]
+  
+- 특정 조건에 따라 조회할 때 사용한다. (선택)
+  
+- **GROUP BY**
+
+  - **동일한 값을 가진 데이터를 집계해서 조회하고자 할 때 사용**하는 문장 (선택)
+
+- **ORDER BY**
+
+  - **오름차순(ascribing) or 내림차순(describing)으로 정렬할때 사용**하는 문법
+
+  ~~~ sql
+  SELECT NAME, COUNT(NAME) FROM TABLE
+  FROM CART_PRODUCTS GROUP BY CART_ID ORDER BY COUNT(NAME);
+  ~~~
+
+  
+
+<br>
+
+### ## 데이터베이스 용어정리
+
+- **트랜젝션**
+  - **트랜잭션은 데이터베이스의 논리적 연산단위**이다.
+  - 데이터베이스 내에서 한꺼번에 수행되어야 할 일련의 연산집합
+
+- **NoSQL**
+  - **Not Only SQL의 약자,** 기존의 RDBMS와 다른 형태의 데이터로 저장하는 기술
+  - 트랜잭션을 지원하지 않는다.
+
+- **DDL** (Data Definition Language)
+  - **데이터 정의 언어**
+  - 데이터베이스 스키마를 정의 or 조작하기 위해 사용한다. 
+  - CREATE, ALTER, DROP, TRUNCATE 등이 있다. 
+- **DML** (Data Manipulation Language)
+  - **데이터 조작 언어**, 데이터를 조작하기 위해 사용한다. 
+  - SELECT, INSERT, DELETE, UPDATE
+- **DCL** (Data Control Language)
+  - **데이터 제어언어**
+  - 데이터의 보안, 무결성 등을 정의하는데 사용한다. 
+  - COMMIT, ROLLBACK, GRANT, REVOKE
+- **DQL** (Data Query Language)
+  - **SELECT만을 따로 분리해서 쿼리로 표현**하는 언어
+- **TCL** (transaction Control Language)
+  - **트랜젝션 제어 언어**
+
+<br><br>
