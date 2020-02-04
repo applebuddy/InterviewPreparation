@@ -177,7 +177,7 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
 
 <br><br>
 
-### ## Sorting Methods, 정렬 방법
+## ## Sorting Methods, 정렬 방법
 
 - **안정정렬/불안정정렬의 차이** : **같은 값이 존재할때 해당 값들의 인덱스 순서가 정렬 후에 유지될 수 있는지 여부에 따라 결정**된다. 
 
@@ -187,9 +187,9 @@ rootTree.traversePostOrder { print($0, terminator: "->") }
     - **한번 파티션이 진행될 때마다 피벗을 기준으로 좌 우는 각각 피벗보다 작고(좌측) 피벗보다 큰(우측) 값으로 나뉘어 진다. 파티션이 된 후 양쪽에서 재귀적으로 분할정복방식으로 정렬**이 이루어진다.
   - **같은 값의 인덱스 위치가 바뀔 수 있는 불안정 정렬**
   - **최적의 상황에서 복잡도는 O(NlogN)** 이다.
-    - 분발정복 알고리즘이 적용되어 정렬 체크구간이 쪼개질 수록 복잡도가 줄어든다.
+    - 분할정복 알고리즘이 적용되어 정렬 체크구간이 쪼개질 수록 복잡도가 줄어든다.
   - **최악의 상황에서 복잡도는 O(N^2)** 이다.
-    - **이미 정렬이 되어있는 상태에서 비펏이 양 끝에 위치할 경우 N^2번을 순회**하며 **분할정복의 이점을 활용하지 못하기 때문**이다. 
+    - **이미 정렬이 되어있는 상태에서 피벗이 양 끝에 위치할 경우 N^2번을 순회하며 분할정복의 이점을 활용하지 못하기 때문**이다. 
 ~~~ swift
 import Foundation
 
@@ -234,7 +234,7 @@ print(arr)
 - **병합 정렬 (Merge Sort)**
   - **전체 배열집합을 하나의 단위로 분할 한 뒤 분할한 원소를 다시 병합하는 정렬** 방식
   - **퀵정렬과 함께 분할정복 정렬 알고리즘 기법 중 하나**
-  - **안정 정렬**
+  - 불안정 정렬인 퀵정렬과 달리 **안정 정렬**
 - **계수정렬 (Counting Sort)**
   - 계수가능 범위에서 배열 인덱스를 이용해 요소를 정렬한다. 
   - **복잡도는 O(N)로 매우 효율적**이다.
@@ -242,10 +242,10 @@ print(arr)
     - **매우 큰 계수 범위에 대한 사용 제한**
 - **힙 정렬 (Heap Sort)** 
   - **Complete Binary Tree를 이용한 Heap 정렬**
-  - **루트노드는 항상 최대 or 최솟값을 가진다.**
+  - **루트노드는 항상 최대 or 최솟값(특정 조건 하 Top 값)을 가진다.**
     - **이후 루트의 값을 마지막 자식노드와 바꾼 뒤 하위 노드와 크기를 비교하며 재정렬**을 하며 이를 **N번 반복하여 전체 정렬을 달성**한다. 
   - **불안정 정렬**
-  - **일반 적인 복잡도는 안정적인 O(NlogN)이다.**
+  - **일반 적인 복잡도는 어떤 정렬조건에서든 안정적인 O(NlogN)이다.**
 - **삽입 정렬 (Insert Sort)**
   - 좌측부터해서 각 요소가 들어갈 위치를 현재까지 거쳐간 영역에 한해 순회탐색하여 비교하고 적절한 위치에 넣어준다. 
   - 인간이 기본적으로 정렬할때 사용하는 방법과 유사한 기법
@@ -493,7 +493,101 @@ print(arr)
 
 <br><br>
 
+# @ Objective-C 관련 질문
 
+## KVO 
+- **참고 링크: https://jcsoohwancho.github.io/2019-11-30-KVO(Key-Value-Observing)**
+- Key Value Observing으로 객체의 프로퍼티 변화를 감시하고, 변화할때에 맞춰서 필요한 동작을 수행할 수 있도록 한다. 
+- swift언어와 함께 KVO를 사용하기 위해서는 관련된 객체 모두가 KVO를 지원해야한다.
+  - 이를 위해서는 NSObject를 상속해야하며 이는 곧 클래스만 KVO를 구현할 수 있음을 의미한다. (구조체, 열거형 등은 구조체타입으로 상속이 불가능하기 때문)
+- 변화를 감지하기위한 프로퍼티에 dynamic 키워드를 붙여주어야한다. 
+  - dynamic 키워드를 붙여 해당 프로퍼티를 Objective-C Runtime에 노출시키고 Message Dispatch를 사용할 수 있도록 한다. 
+  - @objc Annotation을 붙여도 dynamic을 붙이지 않으면 KVO기능을 사용할 수 없다. 
+
+<br>
+
+### KVO 적용할 프로퍼티 선언
+- **KVO 적용할 프로퍼티 선언하기 ▼**
+~~~ swift
+import Foundation 
+
+// KVO사용을 하려는 객체는 NSObject를 상속받은 클래스여야 한다. 
+class Derived: NSObject {
+    // KVO를 사용하고자 하는 프로퍼티에 @objc dynamic 키워드를 붙여서 KVO를 사용한다.
+    @objc dynamic var rect: CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+}
+~~~
+<br>
+
+### Observer 등록
+- addObserver(_:forKeyPath:options:context:) 메소드를 통해서, Observer를 등록한다. 
+- forkeyPath: String타입으로 감지하고자 하는 프로퍼티를 지정한다. 
+- options: 지정한 프로퍼티의 값이 변화할 대, 어떤 시점의 값을 돌려받을 지 지정한다. 다수의 옵션을 지정할 수도 있다. 
+  - .old : 변경 이전 값을 dictionary에 담으며 oldKey로 참조할 수 있다.
+  - .new : 새로 변경된 값을 dictionary에 담는다. newKey로 참조할 수 있다. 
+- Observer로 사용될 객체는 observeValue(forKeyPath:of:change:context)를 오버라이드 해야한다. 
+- **KVO 프로퍼티에 옵저버 추가 + observeValue override 하기 ▼**
+
+~~~ swift 
+class Observer: NSObject {
+    let derived = Derived()
+    
+    override init() {
+    	super.init()
+	// NSObject를 상속받은 클래스 인스턴스의 rect프로퍼티를 감지하기 위해 옵저버를 추가하고 있다.
+	derived.addObserver(self, forKeyPath: "rect", options: [.new, .old], context: nil)
+    }
+    
+    // 옵저버 역할을 하는 객체는 observeValue 메서드를 override하여 프로퍼티 변화를 감지할 수 있다.
+    override func observeValue(forKeyPath keyPath: String?, of object: Any? change: [NSKeyValueChangeKEy : Any]?, context: UnsafeMutableRawPointer?) {
+    	if let old = change?[.oldKey] as? CGRect,
+	let new = change?[.newKey] as? CGRect {
+	    print("\(old) -> \(new) updated!!")
+	}
+    }
+}
+~~~
+
+<br>
+
+### KVO 제외(옵저버 삭제)하기 
+- 특정 감시를 중단하고 싶다면, removeObserver로 Observer를 제거할 수 있다. 
+~~~ swift
+removeObserver(_:forKeyPath:)
+~~~
+
+<br>
+
+### KVO와 유사한 swift 기능, PropertyObserver
+- Swift에서는 KVO와 비슷한 역할을 수행할 수 있는 Property Observer를 제공한다. 
+- KVO와 비슷하지만 NSObject를 상속받지 않는 값 타입에도 적용될 수 있다는 장점이있다. 
+- Property Observer는 타입선언의 일부로서 컴파일 타입에 지정되며 정적인 반면, KVO는 런타임에 동적으로 추가되는 것이라는 차이점이 있다. 
+- **Swift PropertyObserver 활용 예시 ▼**
+~~~ swift
+struct Observer {
+    var rect: CGRect {
+    	willSet {
+	    print("\(self.rect) will change to \(newValue)")
+	}
+	
+	didSet {
+	    print("\(oldValue) changed to \(self.rect)")
+	}
+    }
+    
+    mutating func changeValue(_ new: CGRect) {
+    	rect = new
+    }
+}	
+
+var observer = Observer(rect: CGRect(x: 0, y: 0, width: 0, height: 0))
+observer.changeValue(CGRect(x: 0, y: 0, width: 100, height: 100))
+// 구조체 내부 변경과 함께 rect프로퍼티의 Property Observer가 감시하던 값을 출력한다. 
+// (0.0, 0.0, 0.0, 0.0) will change to (0.0, 0.0, 100.0, 100.0)
+// (0.0, 0.0, 0.0, 0.0) will changed to (0.0, 0.0, 100.0, 100.0)
+~~~
+<br>
+<br>
 
 # @ Swift 기술 질문
 
@@ -531,7 +625,7 @@ print(arr)
 
 ### # 뷰 컨트롤러의 Life Cycle
 
-- V**iewController의 라이프 사이클 순서** 
+- **ViewController의 라이프 사이클 순서** 
   - **init** -> **loadView** -> **viewDidLoad** -> **viewWillAppear** -> **viewDidAppear** ->**viewWillDisappear** -> **viewDidDisappear** -> viewWillUnload/viewDidUnload(iOS6 이후 Deprecated 된 메서드)
 
 <br><br>
@@ -617,7 +711,7 @@ class NSObject
 
 ### # 프레임워크, Frameworks
 
-- 라이브러리는 **실행가능한 코드**일 뿐이지만 **+ 프레임쿼크는 다른 리소스의 하위 디렉토리를 포함하는 번들**이다. 
+- 라이브러리는 **실행가능한 코드**일 뿐이지만 **+ 프레임크는 다른 리소스의 하위 디렉토리를 포함하는 번들**이다. 
 
 #### ## 코코아 터치 프레임워크 
 
