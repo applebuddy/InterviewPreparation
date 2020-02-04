@@ -69,9 +69,35 @@ return [1, 2, 3]
 
 # @ Objective-C 관련 질문
 
+## KVC
+- **참고 링크: https://jcsoohwancho.github.io/2019-11-28-Key-Value-Coding(KVC))**
+- **KVC는 특정 객체에 문자열(Key)를 이용해서 해당 객체의 프로퍼티 값(Value)에 간접적으로 접근하게 만들어주는 Objective-C 기술** 중 하나이다. 
+- KVC를 적용한 객체는 Objective-C에서의 메소드 호출 방식인 메시징 인터페이스로 일원화시킬 수 있다. 
+- KVC는 Objective-C RunTime에 의존하는 기술이기 떄문에 Swift에서 KVC를 사용하기 위해서는 해당 객체가 NSObject를 상속받은 클래스여야 하며, KVC를 적용하려는 프로퍼티에 @objc Annotation을 붙여서 해당 프로퍼티를 Objective-C RunTime에 노출시켜야 한다. 
+- **KVC 적용예시 ▼**
+~~~ swift
+class Derived: NSObject {
+    @objc let x: Int
+    override init() {
+    	x = 1
+	super.init()
+    }
+}
+
+let derived = Derived()
+print(derived.value(forKey: "x")) // Optional
+~~~
+<br>
+
+### KVC 사용하기
+- KVC를 활용하기 위해서는 NSObject를 상속 받아야 하고, 원하는 프로퍼티를 Objective-C RunTime에 노출시켜야 한다. 
+  - NSObject를 상속받은 객체에서 KVC를 사용하기 때문에 KVO와 마찬가지로 클래스에서만 적용하여 사용할 수 있다.
+
+
+
 ## KVO 
 - **참고 링크: https://jcsoohwancho.github.io/2019-11-30-KVO(Key-Value-Observing)**
-- Key Value Observing으로 객체의 프로퍼티 변화를 감시하고, 변화할때에 맞춰서 필요한 동작을 수행할 수 있도록 한다. 
+- **Key Value Observing으로 객체의 프로퍼티 변화를 감시하고, 변화할때에 맞춰서 필요한 동작을 수행**할 수 있도록 한다. 
 - swift언어와 함께 KVO를 사용하기 위해서는 관련된 객체 모두가 KVO를 지원해야한다.
   - 이를 위해서는 NSObject를 상속해야하며 이는 곧 클래스만 KVO를 구현할 수 있음을 의미한다. (구조체, 열거형 등은 구조체타입으로 상속이 불가능하기 때문)
 - 변화를 감지하기위한 프로퍼티에 dynamic 키워드를 붙여주어야한다. 
