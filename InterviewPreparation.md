@@ -46,9 +46,9 @@
     - 사진들을 분석해서 연도별, 테마별 인생에서 가장 중요한 순간들을 정리하여 분류
   - **애플 소셜 로그인 지원**
     - **애플 소셜 로그인 API 공개**
-    - 로그인을 시도하면 별 다른 입력 절차 없이 Face ID를 이용해서 로그인이 가능, 세부 개인정보 공개 설정이 가능하다.
+      - 로그인을 시도하면 별 다른 입력 절차 없이 Face ID를 이용해서 로그인이 가능, 세부 개인정보 공개 설정이 가능하다.
   - **씬델리게이트 (SceneDelegate) 추가** 
-  - **Opaque type (불투명 타입), property Wrapper (프로퍼티 래퍼) 추가**
+  - **Opaque Type (불투명 타입), property Wrapper (프로퍼티 래퍼) 추가**
 
 <br>
 
@@ -73,7 +73,7 @@ return [1, 2, 3]
 - **참고 링크: https://jcsoohwancho.github.io/2019-11-28-Key-Value-Coding(KVC))**
 - **KVC는 특정 객체에 문자열(Key)를 이용해서 해당 객체의 프로퍼티 값(Value)에 간접적으로 접근하게 만들어주는 Objective-C 기술** 중 하나이다. 
 - KVC를 적용한 객체는 Objective-C에서의 메소드 호출 방식인 메시징 인터페이스로 일원화시킬 수 있다. 
-- KVC는 Objective-C RunTime에 의존하는 기술이기 떄문에 Swift에서 KVC를 사용하기 위해서는 해당 객체가 NSObject를 상속받은 클래스여야 하며, KVC를 적용하려는 프로퍼티에 @objc Annotation을 붙여서 해당 프로퍼티를 Objective-C RunTime에 노출시켜야 한다. 
+- **KVC는 Objective-C RunTime에 의존하는 기술**이기 떄문에 **Swift에서 KVC를 사용하기 위해서는 해당 객체가 NSObject를 상속받은 클래스여야 하며**, **KVC를 적용하려는 프로퍼티에 @objc annotation을 붙여서 해당 프로퍼티를 Objective-C RunTime에 노출시켜야 한다.** 
 - **KVC 적용예시 ▼**
 ~~~ swift
 class Derived: NSObject {
@@ -99,10 +99,11 @@ print(derived.value(forKey: "x")) // Optional
 - **참고 링크: https://jcsoohwancho.github.io/2019-11-30-KVO(Key-Value-Observing)**
 - **Key Value Observing으로 객체의 프로퍼티 변화를 감시하고, 변화할때에 맞춰서 필요한 동작을 수행**할 수 있도록 한다. 
 - swift언어와 함께 KVO를 사용하기 위해서는 관련된 객체 모두가 KVO를 지원해야한다.
-  - 이를 위해서는 NSObject를 상속해야하며 이는 곧 클래스만 KVO를 구현할 수 있음을 의미한다. (구조체, 열거형 등은 구조체타입으로 상속이 불가능하기 때문)
+  - 이를 위해서는 NSObject를 상속해야하며 이는 곧 클래스만 KVO를 구현할 수 있음을 의미한다. 
+    - 구조체, 열거형 등은 구조체타입으로 상속이 불가능하기 때문이다.
 - 변화를 감지하기위한 프로퍼티에 dynamic 키워드를 붙여주어야한다. 
-  - dynamic 키워드를 붙여 해당 프로퍼티를 Objective-C Runtime에 노출시키고 Message Dispatch를 사용할 수 있도록 한다. 
-  - @objc Annotation을 붙여도 dynamic을 붙이지 않으면 KVO기능을 사용할 수 없다. 
+  - **@objc annotation을 붙여도 dynamic을 붙이지 않으면 KVO기능을 사용할 수 없다.** 
+  - 즉,  **KVO 기능을 사용하기 위해서는 NSObject를 상속하는 클래스여야 하며, dynamic 키워드를 붙여 Objective-C Runtime에 노출**시켜 Message Dispatch(문자열 키값을 통해 특정 값을 Observing 하는 기능)를 사용할 수 있도록 한다. 
 
 <br>
 
@@ -135,7 +136,7 @@ class Observer: NSObject {
     override init() {
     	super.init()
 	// NSObject를 상속받은 클래스 인스턴스의 rect프로퍼티를 감지하기 위해 옵저버를 추가하고 있다.
-	derived.addObserver(self, forKeyPath: "rect", options: [.new, .old], context: nil)
+			derived.addObserver(self, forKeyPath: "rect", options: [.new, .old], context: nil)
     }
     
     // 옵저버 역할을 하는 객체는 observeValue 메서드를 override하여 프로퍼티 변화를 감지할 수 있다.
@@ -312,7 +313,8 @@ class NSObject
 
 ### # 프레임워크, Frameworks
 
-- 라이브러리는 **실행가능한 코드**일 뿐이지만 **+ 프레임크는 다른 리소스의 하위 디렉토리를 포함하는 번들**이다. 
+- **라이브러리는 실행가능한 코드**일 뿐이지만 
+- **프레임워크는 다른 리소스의 하위 디렉토리를 포함하는 번들**이다. 
 
 #### ## 코코아 터치 프레임워크 
 
@@ -1104,7 +1106,7 @@ queue.addOperation {
   - **CGFloat** 
 
     - **드로잉 간 부동 소수점 좌표를 나타내는 기본타입**
-    - **드로잉을 하는 모든 지점은 모두 부동 소수점으로 표현**되며 이때 CGFloat타입을 사용한다. 
+    - **드로잉을 하는 모든 지점은 모두 부동 소수점으로 표현**되며 이때 **CGFloat타입을 사용**한다. 
 
   - **CGPoint**
 
@@ -1137,8 +1139,8 @@ queue.addOperation {
 
 ### # associatedtype 
 
-- 일반적으로 변수가 특정 자료형으로 선언되지만 associatedtype을 통해 그 이외의 자료형으로 동적으로 타입이 변할 수 없다. 
-  - 이때 타입을 동적으로 사용할 수 있도록 해주는 건이 associatedtype이다. 
+- 일반적으로 변수는 특정 자료형으로 선언되지만 선언 이후 그 이외의 자료형으로 동적으로 타입이 변할 수 없다. 
+  - 이때 **타입을 동적으로 사용할 수 있도록 해주는 것이 associatedtype**이다. 
 - associatedtype의 사용 예시)
 
 ~~~ swift
@@ -1157,8 +1159,10 @@ extension C {
 }
 
 protocol A {
-  	associatedtype T: B, C // associatedtype을 사용해 B, C 프로토콜을 모두 준수하는 타입을 정의한다.  
-  	var name: T { get set } // protocol의 정의 프로퍼티 name은 B, C 프로토콜을 준수하는 + 읽기/쓰기가 가능한 T 타입으로 정의 된다.
+  	// associatedtype을 사용해 B, C 프로토콜을 모두 준수하는 타입을 정의한다.
+  	associatedtype T: B, C
+  	// protocol의 정의 프로퍼티 name은 B, C 프로토콜을 준수하는 + 읽기/쓰기가 가능한 T 타입으로 정의 된다.
+  	var name: T { get set } 
 }
  
 extension A {
@@ -1185,15 +1189,15 @@ extension A {
 
 ### # Collection 종류
 
-- BiDirectionalCollection
-  - 양방향 컬렉션
-    - count 속도가 랜덤 접근 컬렉션보다 느리다. **복잡도 O(N)**
+- **BiDirectionalCollection**
+  - **양방향 컬렉션**
+    - count, 배열 접근 속도가 RandomAccessCollection보다 느리다. **복잡도 O(N)**
   - swift의 String 자료형에 사용된다.
 
-- RandomAccessCollection
-  - 랜덤 접근 컬렉션
-    - count 속도가 복잡도 **O(1)**
-  - swift의 배열, C++의 벡터, 배열 등에 사용한다. 
+- **RandomAccessCollection**
+  - **랜덤 접근 컬렉션**
+    - count, 값 접근 속도가 복잡도 **O(1)**
+  - **swift의 배열, C++의 벡터, 배열 등에 사용**한다. 
 
 <br>
 
@@ -1288,6 +1292,7 @@ object.someMethod()
   ~~~swift
   // defer 활용 예시)
   func deferTest() {
+      // defer 블록 설정을 통해 deferTest 메서드가 종료 하기 전에 3이 출력됩니다. 
     	defer { print("3") }
     	print("1")
     	print("2")
@@ -1323,7 +1328,7 @@ object.someMethod()
 
 ## ## 자료구조
 
-### **연결리스트 (Linked List)**
+### 연결리스트 (Linked List)
 
 - **선형적으로 단방향으로 연결된 값의 컬렉션**
 - **연결리스트 각각의 노드는 값과 next Node의 포인터를 갖고 있다.** 
