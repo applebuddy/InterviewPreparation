@@ -80,33 +80,36 @@
 
 ### Core Animation
 
-- **Core Animation은 시각적 요소 (visual elements)를 랜더링, 합성, 애니메이션화 하는 것을 지원**합니다.
-- Core Animation은 CPU에 부담을 주지않고, 앱속도 저하를 방지하면서도 높은 프레임, 부드러운 애니메이션을 할 수 있도록 작업을 전용 그래픽 하드웨어에 넘겨 처리합니다.
-- Animation을 사용하는 방법은 크게 2가지입니다. 
-  - UIView의 타입메서드, "animateWithDuration"을 사용하는 방법
-  - Core Animation 을 사용하는 방법 
+- **Core Animation은 시각적 요소 (visual elements)를 랜더링(합성), 애니메이션화 하는 것을 지원**합니다.
+- **Core Animation은 CPU에 부담을 주지않고, 앱 속도 저하를 방지하면서도 높은 프레임, 부드러운 애니메이션을 구현 할 수 있도록 합니다.** 
+  - 애니메이션 작업을 전용 그래픽 하드웨어에 넘겨 처리
+- **Animation을 사용하는 방법은 크게 2가지**입니다. 
+  - **UIView의 타입메서드, "animateWithDuration"을 사용하는 방법**
+  - **Core Animation 을 사용하는 방법**
 
 - 단순한 애니메이션이 아니라면 CoreAnimation을 사용하는 것이 좋다. 
 - **Core Animation을 이해하기 위해서는 먼저 CALayer를 알아야 한다.** 
 
 ### CA 관련 NSObject 구성도 
 
-- **NSObject**
-  - CAAnimationGroup
-  - CAPropertyAnimation
-    - CABasicAnimation
-    - CAKeyFrameAnimation
-  - CATransition
+- **NSObject** (objc 최상위계층 framework) 
+  - - **CAAnimationGroup**
+    - **CAPropertyAnimation**
+      - **CABasicAnimation**
+      - **CAKeyFrameAnimation**
+    - **CATransition**
 
-- CAAnimation을 상속 받는 3가지 객체가 있다. 이 세 객체의 역할을 하나하나 보자면,
+- Objective-C 최상위계층 프레임워크인 NSObject는 CAAnimation을 갖고 있습니다. 
+
+- **CAAnimation을 상속 받는 3가지 객체**가 있다. 이 세 객체의 역할을 하나하나 보자면,
 
   - **CAAnimationGroup**
-    - 다수 Animation을 묶어 동시에 수행하도록 해주는 친구이다. 
+    - 다수 Animation을 묶어 동시에 수행하도록 해주는 객체입니다.
   - **CAPropertyAnimation**
     - **CA의 중심이 되는 것, CA에서 가장 많이 사용되는 것이 CAPropertyAnimation**이다.  
-    - CAPropertyAnimation은 추상클래스로서 CAPropertyAnimation을 상속받는 두 객체가  있다. 
-      - CABasicAnimation
-      - CAKeyFrameAnimation
+    - **CAPropertyAnimation은 추상클래스로서 CAPropertyAnimation을 상속받는 두 객체가  있다.** 
+      - *CABasicAnimation*
+      - *CAKeyFrameAnimation*
 
   - **CABasicAnimation**
     - **CABasicAnimation은 keypath를 이용해 property의 값을 변경하는 animation을 구현**할 수 있다. **property의 값을 설정하기 위해 fromValue, byValue, toValue 등을 사용**하게 되는데 이들의 **상관관계를 숙지해야 효과적인 animation을 구현**할 수 있다. 
@@ -120,7 +123,7 @@
       - 아무것도 설정하지 않은 경우 : 해당 property의 직전 값 -> 현재 값으로 변한다. 
   - **CAKeyframeAnimation**
     - **CAKeyframeAnimation은 해당 property의 값을 연속적으로 바꾸는 animation을 사용하는 클래스**이다.
-    - **property의 값 변화를 NAArray에 설정**한다.
+    - **property의 값 변화를 NSArray에 설정**한다.
     - **변화주기는 keyTime라는 property에 NSArray방식으로 설정**한다.  
       - 이때 **전체 변화주기(Overall Variation Period)는 0.0 ~ 1.0 범위로 분할 지정**한다. **이때 값을 부동소수점이어야 하며 순차적으로 이전 값보다 크거나 같은 값이 나와야 한다.**
     - **이후 전체 animation의 duration을 설정**하면 된다. 
@@ -138,6 +141,32 @@
   - borderWidth
   - borderColor
 
-
-
 ### CocoaTouch Frameworks
+
+- 코코아 터치 프레임워크는 iOS 애플리케이션 개발 환경으로, 애플리케이션의 다양한 기능 구현에 필요한 여러 프레임워크 (MapKit, CoreLocation, UIKit, Foundation, CoreData) 등을 포함하는 최상위 레벨 프레임워크입니다. 
+- 코코아 프레임워크는 macOS 애플리케이션 제작에 사용하는 프레임워크입니다. 
+- 코코아 터치는 핵심 프레임워크인 UIKit, Foundation을 포함합니다. 
+- 코코아 라는 단어는 Objective-C 런타임을 기반으로 하며, NSObject를 상속받는 모든 클래스 & 객체를 가리킬 때 사용합니다. 
+
+### UIKit
+
+- UIKit은 iOS 사용자 인터페이스를 구현, 이벤트를 처리하는 프레임워크입니다. 
+- UIKit 프레임워크 주요 역할
+  -  Gesture, Animation, Drawing, HandlingImage/Text 등 사용자 이벤트 처리를 위한 클래스를 포함합니다. 
+  - 테이블뷰, 슬라이더, 버튼 , 텍스트필드, Alert 창 등 애플리케이션의 화면을 구성하는 요소를 포함합니다. 
+- 사용자 인터페이스에 관련된 클래스는 애플리케이션의 Main Thread(or DispatchQueue.main... )에서만 사용해야 합니다. 
+
+### Foundation
+
+- Foundation 프레임워크는 UIKit과 함께 코코아 터치 프레임워크에 포함된 핵심 프레임워크입니다. 
+- **Foundation은 원시 데이터 타입(String, Int, Double), 컬렉션 타입(Array, Dictionary, Set) 및 운영체제 서비스를 사용해 애플리케이션의 기본적인 기능을 관리하는 프레임워크**입니다. 
+  - 실제 swift 에서는 데이터타입과 기능 대부분은 swift 표준 라이브러리에서 제공합니다. 
+- Foundation 주요 역할
+  - Number, Data, String 원시 데이터타입 사용
+  - Collection : Array, Dictionary, Set 등의 컬렉션 타입 사용 
+  - Data & Time : 날짜와 시간을 계산 혹은 비교하는 작업
+  - Unit, Measurement : 단위변환, 측정
+  - Data Formatting : 숫자, 날짜, 측정값 등의 변환
+  - Filter, Sorting : 컬렉션 요소를 검사하거나 정렬하는 작업
+  - 그 외... 파일 및 데이터 관리, 네트워킹 등...
+
