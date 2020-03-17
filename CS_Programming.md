@@ -76,9 +76,67 @@
 - **Core Data는 애플리케이션 내 모델 계층의 객체를 관리하기 위한 프레임워크**입니다. 해당 프레임워크는 **객체의 영속기능을 포함한 객체 생명주기 및 객체 관계도 관리 작업에 대한 일반적 / 자동화 된 방법을 제시**합니다. 
 - **Core Data는 MVC 등 의 아키텍쳐 중 모델(Model)에서 사용하는 프레임워크** 라고 할 수 있습니다. 
 
-
+<br>
 
 ### Core Animation
+
+- **Core Animation은 시각적 요소 (visual elements)를 랜더링, 합성, 애니메이션화 하는 것을 지원**합니다.
+- Core Animation은 CPU에 부담을 주지않고, 앱속도 저하를 방지하면서도 높은 프레임, 부드러운 애니메이션을 할 수 있도록 작업을 전용 그래픽 하드웨어에 넘겨 처리합니다.
+- Animation을 사용하는 방법은 크게 2가지입니다. 
+  - UIView의 타입메서드, "animateWithDuration"을 사용하는 방법
+  - Core Animation 을 사용하는 방법 
+
+- 단순한 애니메이션이 아니라면 CoreAnimation을 사용하는 것이 좋다. 
+- **Core Animation을 이해하기 위해서는 먼저 CALayer를 알아야 한다.** 
+
+### CA 관련 NSObject 구성도 
+
+- **NSObject**
+  - CAAnimationGroup
+  - CAPropertyAnimation
+    - CABasicAnimation
+    - CAKeyFrameAnimation
+  - CATransition
+
+- CAAnimation을 상속 받는 3가지 객체가 있다. 이 세 객체의 역할을 하나하나 보자면,
+
+  - **CAAnimationGroup**
+    - 다수 Animation을 묶어 동시에 수행하도록 해주는 친구이다. 
+  - **CAPropertyAnimation**
+    - **CA의 중심이 되는 것, CA에서 가장 많이 사용되는 것이 CAPropertyAnimation**이다.  
+    - CAPropertyAnimation은 추상클래스로서 CAPropertyAnimation을 상속받는 두 객체가  있다. 
+      - CABasicAnimation
+      - CAKeyFrameAnimation
+
+  - **CABasicAnimation**
+    - **CABasicAnimation은 keypath를 이용해 property의 값을 변경하는 animation을 구현**할 수 있다. **property의 값을 설정하기 위해 fromValue, byValue, toValue 등을 사용**하게 되는데 이들의 **상관관계를 숙지해야 효과적인 animation을 구현**할 수 있다. 
+    - **CABasicAnimation Property의 사용 예시**
+      - fromValue, toValue 사용 : 해당 property가 fromValue -> toValue로 변한다. 
+      - fromValue, byValue 사용 : 해당 property가 fromValue -> (fromValue + toValue)로 변한다.
+      - byValue, toValue 사용 : 해당 property가 (toValue-byValue) -> toValue로 변한다. 
+      - fromValue만 사용 : 해당 property가 fromValue -> animation 전 설정되었던 상태로 돌아간다.
+      - toValue만 사용 : 해당 property가 animation 전 설정 상태 -> toValue로 변한다. 
+      - byValue만 사용 : 해당 property가 animation 전 설정상태 -> (이전상태 + byValue)로 변한다. 
+      - 아무것도 설정하지 않은 경우 : 해당 property의 직전 값 -> 현재 값으로 변한다. 
+  - **CAKeyframeAnimation**
+    - **CAKeyframeAnimation은 해당 property의 값을 연속적으로 바꾸는 animation을 사용하는 클래스**이다.
+    - **property의 값 변화를 NAArray에 설정**한다.
+    - **변화주기는 keyTime라는 property에 NSArray방식으로 설정**한다.  
+      - 이때 **전체 변화주기(Overall Variation Period)는 0.0 ~ 1.0 범위로 분할 지정**한다. **이때 값을 부동소수점이어야 하며 순차적으로 이전 값보다 크거나 같은 값이 나와야 한다.**
+    - **이후 전체 animation의 duration을 설정**하면 된다. 
+
+- **CATransition**
+
+  - **CATransition은 이미지의 전환을 필요로하는 animation을 지원하는 클래스**이다. 
+  - **duration을 설정한 후 animation을 실행**시킨다. 해당 **layer의 이미지에 변화를 주면 CATransition은 해당 이미지 변화에 맞는 animation을 제공**한다. 
+
+#### CALayer
+
+- **CALayer는 이미지 기반 컨텐츠를 관리하고 해당 컨텐츠에 대한 애니메이션을 수행할 수 있게 해주는 객체**입니다. 
+- **CALayer에서 제공하는 기능**
+  - displayIfNeeded()
+  - borderWidth
+  - borderColor
 
 
 
