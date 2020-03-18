@@ -150,23 +150,26 @@
 
 ## UIKit
 
-- UIKit은 iOS 사용자 인터페이스를 구현, 이벤트를 처리하는 프레임워크입니다. 
+- **UIKit은 iOS 사용자 인터페이스를 구현, 이벤트를 처리하는 프레임워크**입니다. 
 - UIKit 프레임워크 주요 역할
-  -  Gesture, Animation, Drawing, HandlingImage/Text 등 사용자 이벤트 처리를 위한 클래스를 포함합니다. 
-  - 테이블뷰, 슬라이더, 버튼 , 텍스트필드, Alert 창 등 애플리케이션의 화면을 구성하는 요소를 포함합니다. 
-- 사용자 인터페이스에 관련된 클래스는 애플리케이션의 Main Thread(or DispatchQueue.main... )에서만 사용해야 합니다. 
+  -  **Gesture, Animation, Drawing, HandlingImage/Text 등 사용자 이벤트 처리를 위한 클래스를 포함**합니다. 
+  - **테이블뷰, 슬라이더, 버튼 , 텍스트필드, Alert 창 등 애플리케이션의 화면을 구성하는 요소를 포함**합니다. 
+- **사용자 인터페이스에 관련된 클래스는 애플리케이션의 Main Thread(or DispatchQueue.main... )에서만 사용해야 합니다.** 
+  - ex) UI 관련 객체
+
+
 
 ### UITraitEnvironment
 
 - **앱 내 iOS 인터페이스 환경을 구성하는 메서드의 집합**
 
-- Declaration
+- **Declaration**
 
 ~~~ swift 
 protocol UITraitEnvironment
 ~~~
 
-- Overview
+- **Overview**
   - iOS 인터페이스 환경은 수평, 수직 size 클래스, display 규모, 유저 인터페이스 관용구와 같은 특성(traits)를 포함합니다. UITraitEnvironment 프로토콜을 채택한 객체의 trait 환경에 접근하기 위해서 traitCollection property를 사용할 수 있습니다. 
   - 또한 UITraitEnvironment 프로토콜은 인터페이스 환경이 변경될 때 시스템이 호출하는 메서드도 제공하며 이들은 오버라이딩이 가능합니다. 이를 iOS app 환경에 맞게 활용할 수 있습니다. 
   - Trait collections에 대한 더 자세한 내용이 궁금하다면 UITraitCollection을 참조하세요. iOS 적응형 인터페이스 구축에 관한 WWDC 2014 presentation이 필요하다면 아래 링크를 참조하세요.
@@ -177,14 +180,18 @@ protocol UITraitEnvironment
 
 ## Foundation
 
-- Foundation 프레임워크는 UIKit과 함께 코코아 터치 프레임워크에 포함된 핵심 프레임워크입니다. 
+- **Foundation 프레임워크는 UIKit과 함께 코코아 터치 프레임워크에 포함된 핵심 프레임워크**입니다. 
 - **Foundation은 원시 데이터 타입(String, Int, Double), 컬렉션 타입(Array, Dictionary, Set) 및 운영체제 서비스를 사용해 애플리케이션의 기본적인 기능을 관리하는 프레임워크**입니다. 
-  - 실제 swift 에서는 데이터타입과 기능 대부분은 swift 표준 라이브러리에서 제공합니다. 
-- Foundation 주요 역할
+  - **실제 swift 에서는 데이터타입과 기능 대부분은 swift 표준 라이브러리에서 제공**합니다. 
+- **Foundation 주요 역할**
+  - Data타입 사용을 가능하게 해준다, array의 contains를 통한 문자열 검색(NSString 연동)을 가능하게 해준다.
   - Number, Data, String 원시 데이터타입 사용
+    - Int, String, Character, Double 등 swift 표준 라이브러리에서 제공
   - Collection : Array, Dictionary, Set 등의 컬렉션 타입 사용 
+    - Array, Dictionary, Set 등 컬렉션 타입 swit 표준 라이브러리에서 제공
   - Data & Time : 날짜와 시간을 계산 혹은 비교하는 작업
   - Unit, Measurement : 단위변환, 측정
   - Data Formatting : 숫자, 날짜, 측정값 등의 변환
   - Filter, Sorting : 컬렉션 요소를 검사하거나 정렬하는 작업
+    - swift 표준 라이브러리에서 제공
   - 그 외... 파일 및 데이터 관리, 네트워킹 등...
