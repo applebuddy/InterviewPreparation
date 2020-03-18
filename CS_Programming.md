@@ -141,6 +141,8 @@
   - borderWidth
   - borderColor
 
+<br>
+
 ## CocoaTouch Frameworks
 
 - 코코아 터치 프레임워크는 iOS 애플리케이션 개발 환경으로, 애플리케이션의 다양한 기능 구현에 필요한 여러 프레임워크 (MapKit, CoreLocation, UIKit, Foundation, CoreData) 등을 포함하는 최상위 레벨 프레임워크입니다. 
@@ -173,6 +175,10 @@
 
 Objective-C는 Cocoa, CocoaTouch 어플리케이션 개발을 위한 기본 언어입니다. 하지만 Cocoa, CocoaTouch 어플리케이션은 C++, ANSI C 코드를 포함할 수도 있습니다. 추가적으로, Objective-C 런타임에 브릿지된 스크립트 언어인 PyObjC, RubyCocoa등을 사용하여 개발할 수도 있습니다. 
 
+#### AppKit
+
+AppKit은 macOS상에서 그래픽적인, 이벤트기반의 유저인터페이스를 관리하고 구축해주는 역할을 한다. 
+
 #### 관련 자료
 
 - [Root class](https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/RootClass.html#//apple_ref/doc/uid/TP40008195-CH46-SW1)
@@ -182,7 +188,7 @@ Cocoa (Touch) 관련 문서링크
 
 https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/Cocoa.html
 
-
+<br>
 
 ## UIKit
 
@@ -193,7 +199,45 @@ https://developer.apple.com/library/archive/documentation/General/Conceptual/Dev
 - **사용자 인터페이스에 관련된 클래스는 애플리케이션의 Main Thread(or DispatchQueue.main... )에서만 사용해야 합니다.** 
   - ex) UI 관련 객체
 
+<br>
 
+### UIResponder
+
+이벤트를 처리하고 반응하기 위한 추상 인터페이스 (abstract interface)
+
+#### Declaration
+
+class UIResponder: NSObject // UIResponder는 NSObject를 상속받는다. 
+
+#### Overview
+
+UIResponder의 인스턴스들, Responder 객체들은 UIKit app의 이벤트 처리관련 뼈대를 구성합니다. 
+
+그 예로 UIApplication, UIViewController, 모든 UIView 객체들 (UIWindow를 포함하는)을 포함합니다. 
+
+이벤트가 발생했을 때, UIKit에서는 처리를 위해 이벤트를 Responder 객체들로 전송합니다. 이때의 이벤트종류로는 터치이벤트, 모션이벤트, 원경제어이벤트, 압력이벤트 등이 있습니다. 구체적인 타입의 이벤트를 다루기 위해 Responder는 이에 맞는 메서드들을 오버라이딩해야합니다. 그 예로, 터치이벤트를 다루기 위해서는 Responder는 touchesBegan(_:with:), touchesMoved(_:with:), touchesEnded(_:with:), touchesCancelled(_:with:) 메서드를 사용합니다. 터치의 경우, Responder는 앱의 인터페이스를 적절하게 업데이트하고, 터치의 트랙을 추적하기 위해 UIKit에서 제공되는 이벤트 정보를 사용합니다. 
+
+https://developer.apple.com/documentation/uikit/uiresponder/1621142-touchesbegan
+
+https://developer.apple.com/documentation/uikit/uiresponder/1621107-touchesmoved
+
+https://developer.apple.com/documentation/uikit/uiresponder/1621084-touchesended
+
+https://developer.apple.com/documentation/uikit/uiresponder/1621116-touchescancelled
+
+처리 이벤트 (Handling Events) 뿐만 아니라, UIKit Responder는 App의 처리되지 않은 이벤트를 앱의 다른 파트로 전송하는 것을 관리해줍니다. 만약 주어진 Responder가 이벤트를 처리하지 앟는다면, 해당 이벤트를 Responder Chain의 다음 이벤트로 전달합니다. UIKit은 사전에 정의된 규칙을 사용해 어떤 객체가 다음 이벤트를 수신해야할 지 결정하며 Responder Chain을 동적으로 관리합니다. 예를들어 뷰가 자신의 수퍼뷰에게 이벤트를 전달하고, 계층 구조의 root뷰는 이를 뷰컨트롤러로 전달합니다. 
+
+UIView -> UIView's superView -> UIViewController -> UIWindow -> UIApplication -> UIApplicationDelegate
+
+Responder들은 UIEvent 객체들을 처리하지만, 또한 입력 뷰를 통한 커스텀 입력을 받을 수도 있습니다. 시스템의 키보드가 대표적인 예라고 할 수 있겠습니다. 유저가 스크린상의 UITextField, UITextView 객체를 텝했을 때, View는 first Responder가 되며 자신의 input View, system keyboard를 보여줍니다. 유사하게, 당신은 커스텀 input View를 만들고 다른 Responder들이 활성화 되었을때 이를 보여줄 수 있습니다. 커스텀 input View를 Responder와 연관짓기 위해서는 해당 뷰를 Responder의 input View에 할당하세요. Responder와 Responder Chain 관련 정보를 얻고 싶으시다면, Event Handling Guide for UIKit Apps 를 참조하세요.
+
+
+
+https://developer.apple.com/documentation/uikit/#//apple_ref/doc/uid/TP40009541
+
+
+
+<br>
 
 ### UITraitEnvironment
 
@@ -248,11 +292,15 @@ Intrinsic size는 컨텐츠 프레임에 대해 독립적이어야만 하는데 
     - swift 표준 라이브러리에서 제공
   - 그 외... 파일 및 데이터 관리, 네트워킹 등...
 
+<br>
+
 ### NSObject
 
 - Objective-C 클래스 최상위 계층의 root 클래스
 - Objective-C 객체로서 행동하고, Objective-C Runtime을 활용하기 위해 기본적으로 상속하는 클래스가 NSObject이빈다. 
 - 객체생성, 해제 등에 따른 메모리 관리, 메시지디스패치, KVC, KVO, Objective-C Runtime 활용 등을 위해 사용한다.
+
+<br>
 
 ### Objective-C Runtime
 
