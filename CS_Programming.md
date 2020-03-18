@@ -141,12 +141,48 @@
   - borderWidth
   - borderColor
 
-### CocoaTouch Frameworks
+## CocoaTouch Frameworks
 
 - 코코아 터치 프레임워크는 iOS 애플리케이션 개발 환경으로, 애플리케이션의 다양한 기능 구현에 필요한 여러 프레임워크 (MapKit, CoreLocation, UIKit, Foundation, CoreData) 등을 포함하는 최상위 레벨 프레임워크입니다. 
 - 코코아 프레임워크는 macOS 애플리케이션 제작에 사용하는 프레임워크입니다. 
 - 코코아 터치는 핵심 프레임워크인 UIKit, Foundation을 포함합니다. 
 - 코코아 라는 단어는 Objective-C 런타임을 기반으로 하며, NSObject를 상속받는 모든 클래스 & 객체를 가리킬 때 사용합니다. 
+
+### Cocoa (Touch) 공식 문서 내용
+
+- Cocoa, CocoaTouch는 OS X, iOS에서의 어플리케이션 개발 환경입니다. 
+- Cocoa, CocoaTouch는 Objective-C 런타임과 2개의 핵심 프레임워크로 구성되어 있습니다. 
+  - Cocoa는 Foundation, AppKit 프레임워크를 포함하며 OS X에서 동작하는 어플리케이션을 개발할때 사용됩니다. 
+  - Cocoa Touch는 Foundation, UIKit 핵심프레임워크를 포함하며, iOS에서 동작하는 어플리케이션을 개발할 때 사용됩니다.
+- **Note:**  용어, "Cocoa"는 일반적으로 Objective-C 최상단 root 클래스, NSObject를 상속하고, Objective-C 런타임을 기반으로 하고 있는 객체, 클래스를 의미해왔습니다. 
+  - 이밖에도 "Cocoa" 혹은 "Cocoa Touch"는 OS X, iOS 플랫폼의 어플리케이션 개발 프로그래밍 인터페이스를 언급할때도 사용됩니다. 
+
+#### The Frameworks
+
+- 핵심프레임워크 중 하나인 Foundation 프레임워크는 기본적인 객체행위를 정의하고 있는 root 클래스, NSObject를 상속받고 있습니다. 
+  - 이는 클래스들이 String, Number 등의 원시 데이터타입을 사용할 수 있게 해주며,
+  -  Array, Dictionary, Set 등의 컬렉션도 사용할 수 있게 해줍니다.(데이터타입 및 컬렉션 대부분은 기본적으로 스위프트 표준 라이브러리에서도 제공하고 있습니다.)
+- Foundation은 또한 국제화, 객체지속성, 파일관리, XML 처리 등을 위한 기능도 제공합니다. 
+- 시스템 객체나 포트, 스레드, locks, 프로세스 등에 접근할 수 있습니다. 
+- Foundation은 절차적 인터페이스를 표방하는 Core Foundation을 기반으로 합니다. (ANSI C)
+  - ANSI : American National Standards Institute의 약자로 미국표준협회의 약자
+
+당신은 애플리케이션의 유저 인터페이스 개발을 위해 AppKit, UIKit 프레임워크를 사용할 수 있습니다. AppKit, UIKit 프레임워크는 목적은 동일하나 플랫폼에 따라 다릅니다. 이 두개의 프레임워크는 이벤트처리, 그리기, 이미지처리, 텍스트처리, 응용프로그램 간 데이터 전송 등을 위한 클래스들을 포함하고 있습니다. 또한 TableView, Sliders, Buttons, TextFields, Alert 등의 다양한 유저-인터페이스 요소들을 포함합니다.
+
+#### Objective-C
+
+Objective-C는 Cocoa, CocoaTouch 어플리케이션 개발을 위한 기본 언어입니다. 하지만 Cocoa, CocoaTouch 어플리케이션은 C++, ANSI C 코드를 포함할 수도 있습니다. 추가적으로, Objective-C 런타임에 브릿지된 스크립트 언어인 PyObjC, RubyCocoa등을 사용하여 개발할 수도 있습니다. 
+
+#### 관련 자료
+
+- [Root class](https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/RootClass.html#//apple_ref/doc/uid/TP40008195-CH46-SW1)
+- [Objective-C](https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/ObjectiveC.html#//apple_ref/doc/uid/TP40008195-CH43-SW1)
+
+Cocoa (Touch) 관련 문서링크
+
+https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/Cocoa.html
+
+
 
 ## UIKit
 
@@ -174,7 +210,23 @@ protocol UITraitEnvironment
   - 또한 UITraitEnvironment 프로토콜은 인터페이스 환경이 변경될 때 시스템이 호출하는 메서드도 제공하며 이들은 오버라이딩이 가능합니다. 이를 iOS app 환경에 맞게 활용할 수 있습니다. 
   - Trait collections에 대한 더 자세한 내용이 궁금하다면 UITraitCollection을 참조하세요. iOS 적응형 인터페이스 구축에 관한 WWDC 2014 presentation이 필요하다면 아래 링크를 참조하세요.
 
+### IntrinsicContentSize
 
+- UI의 본질적인 컨텐츠 사이즈
+
+#### Declaration
+
+~~~ swift
+var intrinsicContentSize: CGSize { get }
+~~~
+
+#### Discussion
+
+커스텀 뷰들은 전형적으로 화면에 나타날 때 레이아웃 시스템 상에서는 알수 없는 각자의 Content Size를 갖고 있습니다. 이때 프로퍼티를 설정하면 Content에 기반해서 어떤 크기가 되어야 할지에 대해 레이아웃 시스템과 소통할 수 있습니다. 
+
+Intrinsic size는 컨텐츠 프레임에 대해 독립적이어야만 하는데 이는 레이아웃 시스템이 변경된 높이에 기반한 너비에 대해 동적으로 소통할 방법이 없기 때문입니다. 
+
+만약 커스텀 뷰가 주어진 크기에 대한 본질적 크기가 없다면, 치수에 대하여 타입프로퍼티, noIntrinsicMetric(https://developer.apple.com/documentation/uikit/uiview/1622486-nointrinsicmetric) 이 사용될 수 있습니다. 
 
 <br>
 
@@ -195,3 +247,17 @@ protocol UITraitEnvironment
   - Filter, Sorting : 컬렉션 요소를 검사하거나 정렬하는 작업
     - swift 표준 라이브러리에서 제공
   - 그 외... 파일 및 데이터 관리, 네트워킹 등...
+
+### NSObject
+
+- Objective-C 클래스 최상위 계층의 root 클래스
+- Objective-C 객체로서 행동하고, Objective-C Runtime을 활용하기 위해 기본적으로 상속하는 클래스가 NSObject이빈다. 
+- 객체생성, 해제 등에 따른 메모리 관리, 메시지디스패치, KVC, KVO, Objective-C Runtime 활용 등을 위해 사용한다.
+
+### Objective-C Runtime
+
+- iOS앱 개발을 통해 KVO, KVC 등의 기능을 사용하기 위해서는 Objective-C Runtime을 사용해야한다. 런타임이 있다는 것은 즉, Objective-C가 동적 언어(dynamic language)라는 것이다. 정적인 언어(static language)들의 경우 컴파일/링 시점에서 이미 코드가 어떻게 실행될지에 대한 모든것이 결정된다. 반면, 런타임을 지닌 동적 언어는 이런 결정들을 실제 각 코드가 실행되는 순간까지 미룰 수 있는 특징을 갖고 있다. 이런 objective-C의 동적 특징 덕분에 실제 코드가 실행중인 Runtime 상황에서 objective-C Runtime에 의해 원하는 객체로 메시지를 전송(Message Dispatch)하고, 메서드를 변경하고, 감지하는 등의 유연한 동작이 가능해진다. 
+
+#### NSObject 클래스를 상속받는 이유
+
+- Objective-C 프로그래밍을 하다보면 NSObject클래스를 상속받아 사용하게 되는 것을 알 수 있다. NSObject는 objective-C 최상위 프레임워크로서 NSObject를 상속받음으로서 Objective-C Runtime의 동작을 위한 추가 정보들이 자동으로 모든 클래스에 포함되어 컴파일이 되는 것이다. 덕분에 우리가 객체를 생성할때 원하는 형태로 메모리에 객체가 생성 될 수 있다. 
